@@ -1,0 +1,89 @@
+specVersion: 0.0.2
+description: Tracks the ownership and details related to SIGH Boosters
+repository: https://github.com/SIGH-Finance/SIGH-Boosters-sub-graph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SIGHBoosters
+    network: kovan
+    source:
+      address: ' '
+      abi: SIGHBoosters
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/SIGHBoosters.ts      
+      entities:
+        - SIGHBoosters
+        - Booster
+        - BoosterCategory
+        - user
+      abis:
+        - name: SIGHBoosters
+          file: ./abis/SIGHBoosters.json
+      eventHandlers:
+        - event: newCategoryAdded(string,uint256,uint256)
+          handler: handleNewCategoryAdded
+        - event: baseURIUpdated(string)
+          handler: handleBaseURIUpdated
+        - event: BoosterMinted(address,string,string,uint256,uint256)
+          handler: handleBoosterMinted
+        - event: boosterURIUpdated(uint256,string)
+          handler: handleBoosterURIUpdated
+        - event: discountMultiplierUpdated(string,uint256,uint256)
+          handler: handleDiscountMultiplierUpdated
+        - event: BoosterWhiteListed(uint256)
+          handler: handleBoosterWhiteListed
+        - event: BoosterBlackListed(uint256)
+          handler: handleBoosterBlackListed
+        - event: Transfer(address indexed, address indexed, uint256 indexed)
+          handler: handleTransfer
+        - event: Approval(address indexed, address indexed, uint256 indexed)
+          handler: handleApproval
+        - event: ApprovalForAll(address indexed, address indexed, bool)
+          handler: handleApprovalForAll
+
+  - kind: ethereum/contract
+    name: SIGHBoosterSale
+    network: kovan
+    source:
+      address: ' '
+      abi: SIGHBoosterSale
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./src/mapping/SIGHBoosterSale.ts      
+      entities:
+        - BoosterSale
+        - SIGHBoosters
+        - Category
+        - Booster
+        - user
+      abis:
+        - name: SIGHBoosterSale
+          file: ./abis/SIGHBoosterSale.json
+      eventHandlers:
+        - event: BoosterAdded(address,address,uint)
+          handler: handleBoosterAdded
+        - event: BoosterAddedForSale(string,uint)
+          handler: handleBoosterAddedForSale
+        - event: SalePriceUpdated(string,uint)
+          handler: handleSalePriceUpdated
+        - event: SaleTimeUpdated(uint)
+          handler: handleSaleTimeUpdated
+        - event: PaymentTokenUpdated(address)
+          handler: handlePaymentTokenUpdated
+        - event: BoosterSold(address,string,uint,uint)
+          handler: handleBoosterSold
+        - event: BoostersBought(address,address,string,uint,uint)
+          handler: handleBoostersBought
+        - event: FundsTransferred(uint amount)
+          handler: handleFundsTransferred
+          
+            
+
+
+

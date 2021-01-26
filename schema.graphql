@@ -1,0 +1,45 @@
+type SIGHBoosters @entity {
+  name: String!
+  symbol: String!
+  baseURI: String!
+  categories: [BoosterCategory!]! @derivedFrom(field:"_SIGHBoosters")
+  boosters: [Booster!]! @derivedFrom(field:"_SIGHBoosters")
+  totalBoosters: BigInt!
+}
+
+type Booster @entity {
+  id: ID!
+  boosterID: BigInt!
+  category: BoosterCategory!
+  owner: User!
+  ownerAddress: Bytes!
+  approvedAddress: Bytes!
+  imageUrl: String!
+  fuelAvailable: BigDecimal!
+  fuelUsed: BigDecimal!
+  isBlacklisted: Boolean!
+  creationTxHash: [Bytes!]!
+  blaclistedTxHashes: [Bytes!]!
+  _SIGHBoosters: SIGHBoosters!
+}
+
+type BoosterCategory @entity {
+  id: ID!
+  name: String!
+  boostersList: [Booster!]! @derivedFrom(field:"category") 
+  platformDiscountPercent: BigDecimal!
+  reserveFeeDiscountPercent: BigDecimal!
+  totalBoosters: BigInt!
+  creationTxHash: [Bytes!]!
+  DiscountUpdateTxHashes: [Bytes!]!
+  _SIGHBoosters: SIGHBoosters!
+}
+
+
+type User @entity {
+  id: ID!
+  address: Bytes!
+  boostersOwned: [Booster!]! @derivedFrom(field:"owner")
+  listOfBoostersOwned:[BigInt!] 
+  approvedForAllAddress: Bytes!
+}
