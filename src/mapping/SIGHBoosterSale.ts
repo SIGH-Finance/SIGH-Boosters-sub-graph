@@ -145,9 +145,9 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
         _SaleCategory.saleSession = BoostersSalesState.id
     }
     _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.plus(BigInt.fromI32(1))
-    let listOfIds = _SaleCategory.boostersAvailableIDsList
-    listOfIds.push(event.params.boosterid)
-    _SaleCategory.boostersAvailableIDsList = listOfIds
+    // let listOfIds = _SaleCategory.boostersAvailableIDsList
+    // listOfIds.push(event.params.boosterid)
+    // _SaleCategory.boostersAvailableIDsList = listOfIds
 
     
     _boosterSaleEntity.saleCategory = _SaleCategory.id

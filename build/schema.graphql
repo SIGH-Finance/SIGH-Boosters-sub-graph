@@ -49,7 +49,7 @@ type User @entity {
 type BoostersSaleInfo @entity {
   id: ID!
   BoostersSaleContractAddress: Bytes!
-  categoriesForSale: [SaleCategories!]! @derivedFrom(field:"saleSession")
+  categoriesForSale: [SaleCategories!] @derivedFrom(field:"saleSession")
   activeTimestamp: BigInt!
   tokenAcceptedForSale: PaymentMode!
   allTokensAcceptedForSale: [PaymentMode!] @derivedFrom(field:"saleSession")
@@ -60,7 +60,7 @@ type BoostersSaleInfo @entity {
 type SaleCategories @entity {
   id: ID!
   name: String!
-  allBoosters: [boosterSaleEntity!]! @derivedFrom(field:"saleCategory")
+  allBoosters: [boosterSaleEntity!] @derivedFrom(field:"saleCategory")
   totalBoostersSold: BigInt!
   # boostersAvailableIDsList: [BigInt!]
   boostersSoldIDsList: [BigInt!]

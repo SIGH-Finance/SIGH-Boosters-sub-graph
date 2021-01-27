@@ -445,13 +445,24 @@ export class BoostersSaleInfo extends Entity {
     this.set("BoostersSaleContractAddress", Value.fromBytes(value));
   }
 
-  get categoriesForSale(): Array<string> {
+  get categoriesForSale(): Array<string> | null {
     let value = this.get("categoriesForSale");
-    return value.toStringArray();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set categoriesForSale(value: Array<string>) {
-    this.set("categoriesForSale", Value.fromStringArray(value));
+  set categoriesForSale(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("categoriesForSale");
+    } else {
+      this.set(
+        "categoriesForSale",
+        Value.fromStringArray(value as Array<string>)
+      );
+    }
   }
 
   get activeTimestamp(): BigInt {
@@ -549,13 +560,21 @@ export class SaleCategories extends Entity {
     this.set("name", Value.fromString(value));
   }
 
-  get allBoosters(): Array<string> {
+  get allBoosters(): Array<string> | null {
     let value = this.get("allBoosters");
-    return value.toStringArray();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set allBoosters(value: Array<string>) {
-    this.set("allBoosters", Value.fromStringArray(value));
+  set allBoosters(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("allBoosters");
+    } else {
+      this.set("allBoosters", Value.fromStringArray(value as Array<string>));
+    }
   }
 
   get totalBoostersSold(): BigInt {
@@ -565,26 +584,6 @@ export class SaleCategories extends Entity {
 
   set totalBoostersSold(value: BigInt) {
     this.set("totalBoostersSold", Value.fromBigInt(value));
-  }
-
-  get boostersAvailableIDsList(): Array<BigInt> | null {
-    let value = this.get("boostersAvailableIDsList");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigIntArray();
-    }
-  }
-
-  set boostersAvailableIDsList(value: Array<BigInt> | null) {
-    if (value === null) {
-      this.unset("boostersAvailableIDsList");
-    } else {
-      this.set(
-        "boostersAvailableIDsList",
-        Value.fromBigIntArray(value as Array<BigInt>)
-      );
-    }
   }
 
   get boostersSoldIDsList(): Array<BigInt> | null {

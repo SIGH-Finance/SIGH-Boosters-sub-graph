@@ -101,7 +101,7 @@ export function createSaleCategory(ID: string): SaleCategories {
     let _SaleCategory = new SaleCategories(ID)
     _SaleCategory.name = ''
     _SaleCategory.totalBoostersSold = new BigInt(0)
-    _SaleCategory.boostersAvailableIDsList = [] 
+    // _SaleCategory.boostersAvailableIDsList = [] 
     _SaleCategory.boostersSoldIDsList = []  
     _SaleCategory.totalBoostersAvailable = new BigInt(0) 
     _SaleCategory.salePrice = BigDecimal.fromString('0')
