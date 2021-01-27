@@ -43,3 +43,47 @@ type User @entity {
   listOfBoostersOwned:[BigInt!] 
   approvedForAllAddress: Bytes!
 }
+
+
+type BoostersSaleInfo @entity {
+  id: ID!
+  categoriesForSale: [SaleCategories!]! @derivedFrom(field:"saleSession")
+  activeTimestamp: BigInt!
+  tokenAcceptedForSale: PaymentMode!
+  allTokensAcceptedForSale: [PaymentMode!] @derivedFrom(field:"saleSession")
+}
+
+
+type SaleCategories @entity {
+  id: ID!
+  name: String!
+  boostersSold: [boosterSaleEntity!]!
+  totalBoostersSold: BigInt!
+  boostersSoldIDsList: [BigInt!]
+  boostersAvailable: [boosterSaleEntity!]!
+  totalBoostersAvailable: BigInt!
+  boostersAvailableIDsList: [BigInt!]
+  salePrice: BigDecimal!
+  saleSession: BoostersSaleInfo!
+}
+
+type boosterSaleEntity @entity {
+  id: ID!
+  boosterId: BigInt!
+  booster: Booster!
+  addedBy: Bytes!
+
+
+}
+
+type PaymentMode @entity {
+  id: ID!
+  address: Bytes!
+  symbol: String!
+  decimals: BigInt!
+  totalAmountCollected: BigDecimal!
+  amountAvailable: BigDecimal!
+  amountTransferred: BigDecimal!
+  isActive: Boolean!
+  saleSession: BoostersSaleInfo!
+}

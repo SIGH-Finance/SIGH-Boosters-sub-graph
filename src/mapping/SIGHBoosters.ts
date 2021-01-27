@@ -1,6 +1,6 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { newCategoryAdded, baseURIUpdated,BoosterMinted,boosterURIUpdated,discountMultiplierUpdated,BoosterWhiteListed
-,BoosterBlackListed,Transfer,Approval,ApprovalForAll } from "../../generated/SIGHBoosters/SIGHBoosters"
+,BoosterBlackListed,Transfer,Approval,ApprovalForAll } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
 import { SIGHBoosters,Booster, BoosterCategory, User } from "../../generated/schema"
 import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} from "../helpers"
 
