@@ -1,12 +1,12 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { newCategoryAdded, baseURIUpdated,BoosterMinted,boosterURIUpdated,discountMultiplierUpdated,BoosterWhiteListed
-,BoosterBlackListed,Transfer,Approval,ApprovalForAll } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
+,BoosterBlackListed,Transfer,Approval,ApprovalForAll } from "../../generated/SIGHBoosters/SIGHBoosters"
 import { SIGHBoosters,Booster, BoosterCategory, User } from "../../generated/schema"
 import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} from "../helpers"
 
 // updates the Base URI
 export function handleBaseURIUpdated(event: baseURIUpdated): void {
-    let _SIGHBoostersId = new BigInt(1).toHexString()
+    let _SIGHBoostersId = BigInt.fromI32(1).toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     if (!SIGHBoostersState) {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
@@ -19,7 +19,7 @@ export function handleBaseURIUpdated(event: baseURIUpdated): void {
 
 // creates a new Booster category
 export function handleNewCategoryAdded(event: newCategoryAdded): void {
-    let categoryId = event.params._type.toHexString()
+    let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
     if (!categoryState) {
         categoryState = createBoosterCategory(categoryId)
@@ -29,15 +29,15 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
     categoryState.reserveFeeDiscountPercent = BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() 
 
     // SIGH Boosters
-    let SIGHBoostersState = SIGHBoosters.load(new BigInt(1).toHexString())
+    let SIGHBoostersState = SIGHBoosters.load(BigInt.fromI32(1).toHexString())
     if (!SIGHBoostersState) {
-        SIGHBoostersState = createSIGHBoosters(SIGHBoostersState)
+        SIGHBoostersState = createSIGHBoosters(BigInt.fromI32(1).toHexString())
     }
-    categoryState._SIGHBoosters = SIGHBoostersState
+    categoryState._SIGHBoosters = SIGHBoostersState.id
 
     // Tx Hash
     let txHash = categoryState.creationTxHash
-    txHash.push( event.transaction.hash.toHexString() )
+    txHash.push( event.transaction.hash )
     categoryState.creationTxHash = txHash
 
     categoryState.save()
@@ -55,19 +55,19 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.imageUrl = event.params.boosterURI
 
     // Category
-    let categoryId = event.params._type.toHexString()
+    let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
-    boosterState.category = categoryState
+    boosterState.category = categoryState.id
 
     // SIGH Boosters
     let SIGHBoostersState = SIGHBoosters.load(new BigInt(1).toHexString())
-    SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.add(BigInt.fromI32(1))
-    boosterState._SIGHBoosters = SIGHBoostersState
+    SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
+    boosterState._SIGHBoosters = SIGHBoostersState.id
     
 
     // Creation Tx Hash
     let txHash = boosterState.creationTxHash
-    txHash.push( event.transaction.hash.toHexString() )
+    txHash.push( event.transaction.hash )
     boosterState.creationTxHash = txHash    
 
     // User Entity
@@ -80,7 +80,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     let allBoostersOwned = user.listOfBoostersOwned
     allBoostersOwned.push(event.params.newItemId)
     user.listOfBoostersOwned = allBoostersOwned
-    boosterState.owner = user
+    boosterState.owner = user.id
 
     SIGHBoostersState.save()
     boosterState.save()
@@ -90,7 +90,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
 
 // Booster URI Updated
 export function handleBoosterURIUpdated(event: boosterURIUpdated): void {
-    let _boosterId = event.params.newItemId.toHexString()
+    let _boosterId = event.params._boosterURI
     let boosterState = Booster.load(_boosterId)
     boosterState.imageUrl = event.params._boosterURI
     boosterState.save()
@@ -99,7 +99,7 @@ export function handleBoosterURIUpdated(event: boosterURIUpdated): void {
 
 // Discount Multiplier Updated
 export function handleDiscountMultiplierUpdated(event: discountMultiplierUpdated): void {
-    let categoryId = event.params._type.toHexString()
+    let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
     categoryState.platformDiscountPercent = BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() 
     categoryState.reserveFeeDiscountPercent = BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() 
@@ -108,13 +108,13 @@ export function handleDiscountMultiplierUpdated(event: discountMultiplierUpdated
 
 // Booster Whitelisted
 export function handleBoosterWhiteListed(event: BoosterWhiteListed): void {
-    let _boosterId = event.params.newItemId.toHexString()
+    let _boosterId = event.params.boosterId.toHexString()
     let boosterState = Booster.load(_boosterId)
     boosterState.isBlacklisted = false
 
     // Tx Hash
     let txHash_ = boosterState.blaclistedTxHashes
-    txHash_.push( event.transaction.hash.toHexString() )
+    txHash_.push( event.transaction.hash )
     boosterState.blaclistedTxHashes = txHash_    
 
     boosterState.save()
@@ -122,13 +122,13 @@ export function handleBoosterWhiteListed(event: BoosterWhiteListed): void {
 
 // Booster Whitelisted
 export function handleBoosterBlackListed(event: BoosterBlackListed): void {
-    let _boosterId = event.params.newItemId.toHexString()
+    let _boosterId = event.params.boosterId.toHexString()
     let boosterState = Booster.load(_boosterId)
     boosterState.isBlacklisted = true
 
     // Tx Hash
     let txHash_ = boosterState.blaclistedTxHashes
-    txHash_.push( event.transaction.hash.toHexString() )
+    txHash_.push( event.transaction.hash )
     boosterState.blaclistedTxHashes = txHash_    
 
     boosterState.save()
@@ -165,8 +165,8 @@ export function handleTransfer(event: Transfer): void {
     if (!newUser) {
         newUser = createUser(_userId)
     }
-    newUser.address = event.params.to.toHexString()
-    boosterState.owner = newUser
+    newUser.address = event.params.to
+    boosterState.owner = newUser.id
     let allBoostersOwned = newUser.listOfBoostersOwned
     allBoostersOwned.push(event.params.tokenId)
     newUser.listOfBoostersOwned = allBoostersOwned
@@ -185,7 +185,7 @@ export function handleApproval(event: Approval): void {
         boosterState = createNewBooster(_boosterId)
     }
 
-    boosterState.approvedAddress = event.params.approved.toHexString()
+    boosterState.approvedAddress = event.params.approved
     boosterState.save()
 }
 
@@ -197,9 +197,24 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
     let user = User.load(userId)
     if (!user) {
         user = createUser(userId)
+        user.address = event.params.owner
     }    
-    user.address = event.params.owner.toHexString()
-    user.approvedForAllAddress = event.params.approved
+    let list = user.approvedForAllAddress
+
+    if (event.params.approved) {
+        list.push(event.params.operator)
+    }
+    else {
+        for (let i=0;i < list.length; i++) {
+            if ( list[i] == event.params.operator ) {
+                list[i] = list[list.length - 1]
+                list.pop()
+                break;
+            }
+        }    
+    }
+
+    user.approvedForAllAddress = list
     user.save()
 }
 

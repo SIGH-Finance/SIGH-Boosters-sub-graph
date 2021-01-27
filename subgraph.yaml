@@ -8,7 +8,7 @@ dataSources:
     name: SIGHBoosters
     network: kovan
     source:
-      address: ' '
+      address: '0x0000000000000000000000000000000000000000'
       abi: SIGHBoosters
     mapping:
       kind: ethereum/events
@@ -23,6 +23,8 @@ dataSources:
       abis:
         - name: SIGHBoosters
           file: ./abis/SIGHBoosters.json
+        - name: ERC721
+          file: ./abis/ERC721.json
       eventHandlers:
         - event: newCategoryAdded(string,uint256,uint256)
           handler: handleNewCategoryAdded
@@ -38,18 +40,18 @@ dataSources:
           handler: handleBoosterWhiteListed
         - event: BoosterBlackListed(uint256)
           handler: handleBoosterBlackListed
-        - event: Transfer(address indexed, address indexed, uint256 indexed)
+        - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-        - event: Approval(address indexed, address indexed, uint256 indexed)
+        - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
-        - event: ApprovalForAll(address indexed, address indexed, bool)
+        - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
 
   - kind: ethereum/contract
     name: SIGHBoosterSale
     network: kovan
     source:
-      address: ' '
+      address: '0x0000000000000000000000000000000000000000'
       abi: SIGHBoosterSale
     mapping:
       kind: ethereum/events
@@ -66,21 +68,21 @@ dataSources:
         - name: SIGHBoosterSale
           file: ./abis/SIGHBoosterSale.json
       eventHandlers:
-        - event: BoosterAdded(address,address,uint)
+        - event: BoosterAdded(address,address,uint256)
           handler: handleBoosterAdded
-        - event: BoosterAddedForSale(string,uint)
+        - event: BoosterAddedForSale(string,uint256)
           handler: handleBoosterAddedForSale
-        - event: SalePriceUpdated(string,uint)
+        - event: SalePriceUpdated(string,uint256)
           handler: handleSalePriceUpdated
-        - event: SaleTimeUpdated(uint)
+        - event: SaleTimeUpdated(uint256)
           handler: handleSaleTimeUpdated
         - event: PaymentTokenUpdated(address)
           handler: handlePaymentTokenUpdated
-        - event: BoosterSold(address,string,uint,uint)
+        - event: BoosterSold(address,string,uint256,uint256)
           handler: handleBoosterSold
-        - event: BoostersBought(address,address,string,uint,uint)
+        - event: BoostersBought(address,address,string,uint256,uint256)
           handler: handleBoostersBought
-        - event: FundsTransferred(uint amount)
+        - event: FundsTransferred(uint256)
           handler: handleFundsTransferred
           
             
