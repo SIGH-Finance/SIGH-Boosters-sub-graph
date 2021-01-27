@@ -60,7 +60,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.category = categoryState.id
 
     // SIGH Boosters
-    let SIGHBoostersState = SIGHBoosters.load(new BigInt(1).toHexString())
+    let SIGHBoostersState = SIGHBoosters.load(BigInt.fromI32(1).toHexString())
     SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
     boosterState._SIGHBoosters = SIGHBoostersState.id
     
@@ -146,16 +146,16 @@ export function handleTransfer(event: Transfer): void {
     if ( event.params.from.toHexString() != '0x0000000000000000000000000000000000000000' ) {
         let userId = event.params.from.toHexString()
         let user = User.load(userId)
-        let list =  user.listOfBoostersOwned
-        for (let i=0; i < list.length; i++) {
-            if ( list[i] ==  event.params.tokenId ) {
-                list[i] = list[list.length - 1]
-                break;
-            }
-        }
-        list.pop()
-        user.listOfBoostersOwned = list
-        user.save()
+        // let list =  user.listOfBoostersOwned
+        // for (let i=0; i < list.length; i++) {
+        //     if ( list[i] ==  event.params.tokenId ) {
+        //         list[i] = list[list.length - 1]
+        //         break;
+        //     }
+        // }
+        // list.pop()
+        // user.listOfBoostersOwned = list
+        // user.save()
     }
 
     // NEW OWNER

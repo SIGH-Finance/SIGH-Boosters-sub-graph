@@ -67,6 +67,8 @@ dataSources:
       abis:
         - name: SIGHBoosterSale
           file: ./abis/SIGHBoosterSale.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: BoosterAdded(address,address,uint256)
           handler: handleBoosterAdded

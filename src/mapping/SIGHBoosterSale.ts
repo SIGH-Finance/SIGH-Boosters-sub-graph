@@ -3,12 +3,12 @@ import { BoosterAddedForSale, SalePriceUpdated,PaymentTokenUpdated,FundsTransfer
 ,BoostersBought,BoosterAdded,TokensTransferred } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
 import { BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
 import {createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
-import { ERC20 } from '../../generated/SIGHBoosters/ERC20'
+import { ERC20 } from '../../generated/SIGHBoosterSale/ERC20'
 
 
 // SALE INITIATION TIMESTAMP IS UPDATED
 export function handleSaleTimeUpdated(event: SaleTimeUpdated) : void {
-    let _BoostersSalesId = new BigInt(1).toHexString()
+    let _BoostersSalesId = BigInt.fromI32(1).toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
     if (!BoostersSalesState) {
         BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
@@ -21,7 +21,7 @@ export function handleSaleTimeUpdated(event: SaleTimeUpdated) : void {
 
 //PAYMENT TOKEN BEING ACCEPTED IS UPDATED
 export function handlePaymentTokenUpdated(event: PaymentTokenUpdated) : void {
-    let _BoostersSalesId = new BigInt(1).toHexString()
+    let _BoostersSalesId = BigInt.fromI32(1).toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
     if (!BoostersSalesState) {
         BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
@@ -38,7 +38,7 @@ export function handlePaymentTokenUpdated(event: PaymentTokenUpdated) : void {
         PaymentModeState.amountTransferred = BigDecimal.fromString('0')
         let _tokenContract = ERC20.bind(event.params.token as Address)
         PaymentModeState.symbol =  _tokenContract.symbol()
-        PaymentModeState.decimals =  _tokenContract.decimals()
+        PaymentModeState.decimals =  BigInt.fromI32(_tokenContract.decimals())
         }
         PaymentModeState.isActive = true
         PaymentModeState.saleSession = BoostersSalesState.id
@@ -51,7 +51,7 @@ export function handlePaymentTokenUpdated(event: PaymentTokenUpdated) : void {
 
 //TOKENS BEING TRANSFERRED
 export function handleTokensTransferred(event: TokensTransferred) : void {
-    let _BoostersSalesId = new BigInt(1).toHexString()
+    let _BoostersSalesId = BigInt.fromI32(1).toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
 
     let _PaymentModeId = event.params.token.toHexString()
@@ -73,7 +73,7 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
     PaymentModeState.amountTransferred = PaymentModeState.amountTransferred.plus(amount)
 
     let _tokenContract = ERC20.bind(event.params.token as Address)
-    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address)
+    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
 
     // Tx Hash
     let txHashes = PaymentModeState.transferTxs
@@ -86,7 +86,7 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
 
 //PART OF THE PAYMENT TOKEN BEING ACCEPTED HAS BEEN TRANSFERRED
 export function handleFundsTransferred(event: FundsTransferred) : void {
-    let _BoostersSalesId = new BigInt(1).toHexString()
+    let _BoostersSalesId = BigInt.fromI32(1).toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
 
     let PaymentModeStateId = BoostersSalesState.tokenAcceptedForSale
@@ -96,7 +96,7 @@ export function handleFundsTransferred(event: FundsTransferred) : void {
     PaymentModeState.amountTransferred = PaymentModeState.amountTransferred.plus(amount)
 
     let _tokenContract = ERC20.bind(PaymentModeState.address as Address)
-    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address)
+    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
 
     // Tx Hash
     let txHashes = PaymentModeState.transferTxs
@@ -108,7 +108,7 @@ export function handleFundsTransferred(event: FundsTransferred) : void {
 
 // SALE PRICE FOR A PARTICULAR CATEGORY UPDATED
 export function handleSalePriceUpdated(event: SalePriceUpdated) : void {
-    let _BoostersSalesId = new BigInt(1).toHexString()
+    let _BoostersSalesId = BigInt.fromI32(1).toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
 
     let PaymentModeStateId = BoostersSalesState.tokenAcceptedForSale
@@ -141,10 +141,10 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
     if (!_SaleCategory) {
         _SaleCategory = createSaleCategory(_BoostersSalesId)
         _SaleCategory.name = event.params._type
-        let BoostersSalesState = BoostersSaleInfo.load(new BigInt(1).toHexString())
+        let BoostersSalesState = BoostersSaleInfo.load(BigInt.fromI32(1).toHexString())
         _SaleCategory.saleSession = BoostersSalesState.id
     }
-    _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.add(1)
+    _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.plus(BigInt.fromI32(1))
     let listOfIds = _SaleCategory.boostersAvailableIDsList
     listOfIds.push(event.params.boosterid)
     _SaleCategory.boostersAvailableIDsList = listOfIds
@@ -171,15 +171,15 @@ export function handleBoosterSold(event: BoosterSold) : void {
     _boosterSaleEntity.saleTx = event.transaction.hash
 
     // Category of the Booster Entity which is added
-    let _SaleCategoryID = event.params._BoosterType.toHexString()
-    let _SaleCategory = BoostersSaleInfo.load(_SaleCategoryID)
-    _SaleCategory.totalBoostersSold = _SaleCategory.totalBoostersSold.add(1)
-    _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.sub(1)
+    let _SaleCategoryID = event.params._BoosterType
+    let _SaleCategory = SaleCategories.load(_SaleCategoryID)
+    _SaleCategory.totalBoostersSold = _SaleCategory.totalBoostersSold.plus(BigInt.fromI32(1))
+    _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.minus(BigInt.fromI32(1))
 
     let availableBoostersList = _SaleCategory.boostersAvailableIDsList
-    for (let i=0; i < availableBoostersList.length() ; i++) {
+    for (let i=0; i < availableBoostersList.length ; i++) {
         if (availableBoostersList[i] == event.params._boosterId) {
-            availableBoostersList[i] = availableBoostersList[availableBoostersList.length() - 1]
+            availableBoostersList[i] = availableBoostersList[availableBoostersList.length - 1]
             availableBoostersList.pop()
             break;
         }
@@ -187,19 +187,20 @@ export function handleBoosterSold(event: BoosterSold) : void {
     _SaleCategory.boostersAvailableIDsList = availableBoostersList
 
     let listOfIds = _SaleCategory.boostersSoldIDsList
-    listOfIds.push(event.params.boosterid)
+    listOfIds.push(event.params._boosterId)
     _SaleCategory.boostersSoldIDsList = listOfIds
 
     // Payment Mode Balance 
-    let _BoostersSalesInfoId = new BigInt(1).toHexString()
+    let _BoostersSalesInfoId = BigInt.fromI32(1).toHexString()
     let BoostersSalesInfoState = BoostersSaleInfo.load(_BoostersSalesInfoId)
-    let paymentMode = BoostersSalesInfoState.tokenAcceptedForSale
+    let PaymentModeStateId = BoostersSalesInfoState.tokenAcceptedForSale
+    let paymentMode = PaymentMode.load(PaymentModeStateId)
     let decimalAdj = BigInt.fromI32(10).pow(paymentMode.decimals as u8).toBigDecimal()
     let amount = event.params.salePrice.toBigDecimal().div(decimalAdj)
-    paymentMode.totalAmountCollected = paymentMode.totalAmountCollected.add(amount)
+    paymentMode.totalAmountCollected = paymentMode.totalAmountCollected.plus(amount)
 
-    let _tokenContract = ERC20.bind(event.params.token as Address)
-    paymentMode.amountAvailable = _tokenContract.balanceOf(_BoostersSalesInfoId.BoostersSaleContractAddress as Address)
+    let _tokenContract = ERC20.bind(paymentMode.address as Address)
+    paymentMode.amountAvailable = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address)
 
     _boosterSaleEntity.save()
     _SaleCategory.save()
@@ -214,26 +215,28 @@ export function handleBoostersBought(event: BoostersBought) : void {
         BoosterPurchasers_.address = event.params.caller
     }
 
-    let _BoostersSalesInfoId = new BigInt(1).toHexString()
+    let _BoostersSalesInfoId = BigInt.fromI32(1).toHexString()
     let BoostersSalesInfoState = BoostersSaleInfo.load(_BoostersSalesInfoId)
-    BoosterPurchasers_.saleSession = BoostersSalesInfoState
+    BoosterPurchasers_.saleSession = BoostersSalesInfoState.id
 
-    let paymentMode = BoostersSalesInfoState.tokenAcceptedForSale
+    let PaymentModeStateId = BoostersSalesInfoState.tokenAcceptedForSale
+    let paymentMode = PaymentMode.load(PaymentModeStateId)
+
     let decimalAdj = BigInt.fromI32(10).pow(paymentMode.decimals as u8).toBigDecimal()
     if (event.params._BoosterType == 'MARVIN') {
-        let rewardRatio = 1
-        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).mul(rewardRatio)
-        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.add(amount)
+        let rewardRatio = BigDecimal.fromString('1.2')
+        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio)
+        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
     }
     if (event.params._BoosterType == 'JARVIS') {
-        let rewardRatio = 1
-        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).mul(rewardRatio)
-        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.add(amount)
+        let rewardRatio = BigDecimal.fromString('1.2')
+        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio)
+        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
     }
 
 
     let listOfTxs = BoosterPurchasers_.purchaseTxs
-    listOfTxs.push(event.tx.hash.toHexString())
+    listOfTxs.push(event.transaction.hash)
     BoosterPurchasers_.purchaseTxs = listOfTxs
 
 

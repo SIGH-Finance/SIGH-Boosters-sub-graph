@@ -41,7 +41,7 @@ type User @entity {
   id: ID!
   address: Bytes!
   boostersOwned: [Booster!]! @derivedFrom(field:"owner")
-  listOfBoostersOwned:[BigInt!] 
+  listOfBoostersOwned:[BigInt!]!
   approvedForAllAddress: [Bytes!]!
 }
 

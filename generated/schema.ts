@@ -387,24 +387,13 @@ export class User extends Entity {
     this.set("boostersOwned", Value.fromStringArray(value));
   }
 
-  get listOfBoostersOwned(): Array<BigInt> | null {
+  get listOfBoostersOwned(): Array<BigInt> {
     let value = this.get("listOfBoostersOwned");
-    if (value === null || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigIntArray();
-    }
+    return value.toBigIntArray();
   }
 
-  set listOfBoostersOwned(value: Array<BigInt> | null) {
-    if (value === null) {
-      this.unset("listOfBoostersOwned");
-    } else {
-      this.set(
-        "listOfBoostersOwned",
-        Value.fromBigIntArray(value as Array<BigInt>)
-      );
-    }
+  set listOfBoostersOwned(value: Array<BigInt>) {
+    this.set("listOfBoostersOwned", Value.fromBigIntArray(value));
   }
 
   get approvedForAllAddress(): Array<Bytes> {
