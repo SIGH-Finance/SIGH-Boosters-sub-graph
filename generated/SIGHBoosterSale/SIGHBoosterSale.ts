@@ -220,6 +220,32 @@ export class SaleTimeUpdated__Params {
   }
 }
 
+export class TokensTransferred extends ethereum.Event {
+  get params(): TokensTransferred__Params {
+    return new TokensTransferred__Params(this);
+  }
+}
+
+export class TokensTransferred__Params {
+  _event: TokensTransferred;
+
+  constructor(event: TokensTransferred) {
+    this._event = event;
+  }
+
+  get token(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get to(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
 export class SIGHBoosterSale__getBoosterSaleDetailsResult {
   value0: BigInt;
   value1: BigInt;

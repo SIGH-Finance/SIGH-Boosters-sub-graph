@@ -1,0 +1,87 @@
+specVersion: 0.0.2
+description: Tracks the ownership and details related to SIGH Boosters
+repository: https://github.com/SIGH-Finance/SIGH-Boosters-sub-graph
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SIGHBoosters
+    network: kovan
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: SIGHBoosters
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: SIGHBoosters/SIGHBoosters.wasm
+      entities:
+        - SIGHBoosters
+        - Booster
+        - BoosterCategory
+        - user
+      abis:
+        - name: SIGHBoosters
+          file: SIGHBoosters/abis/SIGHBoosters.json
+        - name: ERC721
+          file: SIGHBoosters/abis/ERC721.json
+      eventHandlers:
+        - event: newCategoryAdded(string,uint256,uint256)
+          handler: handleNewCategoryAdded
+        - event: baseURIUpdated(string)
+          handler: handleBaseURIUpdated
+        - event: BoosterMinted(address,string,string,uint256,uint256)
+          handler: handleBoosterMinted
+        - event: boosterURIUpdated(uint256,string)
+          handler: handleBoosterURIUpdated
+        - event: discountMultiplierUpdated(string,uint256,uint256)
+          handler: handleDiscountMultiplierUpdated
+        - event: BoosterWhiteListed(uint256)
+          handler: handleBoosterWhiteListed
+        - event: BoosterBlackListed(uint256)
+          handler: handleBoosterBlackListed
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+  - kind: ethereum/contract
+    name: SIGHBoosterSale
+    network: kovan
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: SIGHBoosterSale
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: SIGHBoosterSale/SIGHBoosterSale.wasm
+      entities:
+        - BoosterSale
+        - SIGHBoosters
+        - Category
+        - Booster
+        - user
+      abis:
+        - name: SIGHBoosterSale
+          file: SIGHBoosterSale/abis/SIGHBoosterSale.json
+        - name: ERC20
+          file: SIGHBoosterSale/abis/ERC20.json
+      eventHandlers:
+        - event: BoosterAdded(address,address,uint256)
+          handler: handleBoosterAdded
+        - event: BoosterAddedForSale(string,uint256)
+          handler: handleBoosterAddedForSale
+        - event: SalePriceUpdated(string,uint256)
+          handler: handleSalePriceUpdated
+        - event: SaleTimeUpdated(uint256)
+          handler: handleSaleTimeUpdated
+        - event: PaymentTokenUpdated(address)
+          handler: handlePaymentTokenUpdated
+        - event: BoosterSold(address,string,uint256,uint256)
+          handler: handleBoosterSold
+        - event: BoostersBought(address,address,string,uint256,uint256)
+          handler: handleBoostersBought
+        - event: FundsTransferred(uint256)
+          handler: handleFundsTransferred

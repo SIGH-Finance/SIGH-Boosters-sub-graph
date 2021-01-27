@@ -64,7 +64,7 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
         PaymentModeState.amountTransferred = BigDecimal.fromString('0')
         let _tokenContract = ERC20.bind(event.params.token as Address)
         PaymentModeState.symbol =  _tokenContract.symbol()
-        PaymentModeState.decimals =  _tokenContract.decimals()
+        PaymentModeState.decimals =  BigInt.fromI32(_tokenContract.decimals())
         PaymentModeState.saleSession = BoostersSalesState.id
         }
 
@@ -77,7 +77,7 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
 
     // Tx Hash
     let txHashes = PaymentModeState.transferTxs
-    txHashes.push( event.transaction.hash.toHexString() )
+    txHashes.push( event.transaction.hash )
     PaymentModeState.transferTxs = txHashes
 
     PaymentModeState.save()
@@ -176,15 +176,15 @@ export function handleBoosterSold(event: BoosterSold) : void {
     _SaleCategory.totalBoostersSold = _SaleCategory.totalBoostersSold.plus(BigInt.fromI32(1))
     _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.minus(BigInt.fromI32(1))
 
-    let availableBoostersList = _SaleCategory.boostersAvailableIDsList
-    for (let i=0; i < availableBoostersList.length ; i++) {
-        if (availableBoostersList[i] == event.params._boosterId) {
-            availableBoostersList[i] = availableBoostersList[availableBoostersList.length - 1]
-            availableBoostersList.pop()
-            break;
-        }
-    }
-    _SaleCategory.boostersAvailableIDsList = availableBoostersList
+    // let availableBoostersList = _SaleCategory.boostersAvailableIDsList
+    // for (let i=0; i < availableBoostersList.length ; i++) {
+    //     if (availableBoostersList[i] == event.params._boosterId) {
+    //         availableBoostersList[i] = availableBoostersList[availableBoostersList.length - 1]
+    //         availableBoostersList.pop()
+    //         break;
+    //     }
+    // }
+    // _SaleCategory.boostersAvailableIDsList = availableBoostersList
 
     let listOfIds = _SaleCategory.boostersSoldIDsList
     listOfIds.push(event.params._boosterId)
@@ -200,7 +200,7 @@ export function handleBoosterSold(event: BoosterSold) : void {
     paymentMode.totalAmountCollected = paymentMode.totalAmountCollected.plus(amount)
 
     let _tokenContract = ERC20.bind(paymentMode.address as Address)
-    paymentMode.amountAvailable = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address)
+    paymentMode.amountAvailable = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address).toBigDecimal()
 
     _boosterSaleEntity.save()
     _SaleCategory.save()
