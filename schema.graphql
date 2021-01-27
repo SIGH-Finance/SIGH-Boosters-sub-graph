@@ -86,4 +86,5 @@ type PaymentMode @entity {
   amountTransferred: BigDecimal!
   isActive: Boolean!
   saleSession: BoostersSaleInfo!
+  transferTxs: [Bytes!]
 }
