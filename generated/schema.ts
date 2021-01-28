@@ -402,24 +402,6 @@ export class User extends Entity {
   set boostersOwned(value: Array<string>) {
     this.set("boostersOwned", Value.fromStringArray(value));
   }
-
-  get listOfBoostersOwned(): Array<BigInt> {
-    let value = this.get("listOfBoostersOwned");
-    return value.toBigIntArray();
-  }
-
-  set listOfBoostersOwned(value: Array<BigInt>) {
-    this.set("listOfBoostersOwned", Value.fromBigIntArray(value));
-  }
-
-  get approvedForAllAddress(): Array<Bytes> {
-    let value = this.get("approvedForAllAddress");
-    return value.toBytesArray();
-  }
-
-  set approvedForAllAddress(value: Array<Bytes>) {
-    this.set("approvedForAllAddress", Value.fromBytesArray(value));
-  }
 }
 
 export class BoostersSaleInfo extends Entity {

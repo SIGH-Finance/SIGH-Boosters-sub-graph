@@ -64,6 +64,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     // Category
     let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
+    categoryState.totalBoosters = categoryState.totalBoosters.plus(BigInt.fromI32(1))
     boosterState.category = categoryState.id
 
     // SIGH Boosters
@@ -72,8 +73,8 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     if (!SIGHBoostersState) {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
     }
-    boosterState._SIGHBoosters = _SIGHBoostersId
     SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
+    boosterState._SIGHBoosters = _SIGHBoostersId
     
     // Creation Tx Hash
     let txHash = boosterState.creationTxHash
@@ -87,9 +88,6 @@ export function handleBoosterMinted(event: BoosterMinted): void {
         user = createUser(userId)
         user.address = event.params._owner
     }
-    let allBoostersOwned = user.listOfBoostersOwned
-    allBoostersOwned.push(event.params.newItemId)
-    user.listOfBoostersOwned = allBoostersOwned
     boosterState.owner = user.id
 
     SIGHBoostersState.save()
@@ -114,10 +112,13 @@ export function handleBoosterURIUpdated(event: boosterURIUpdated): void {
 export function handleDiscountMultiplierUpdated(event: discountMultiplierUpdated): void {
     let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
-    categoryState.platformDiscountPercent = BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() 
-    categoryState.reserveFeeDiscountPercent = BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() 
+    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_ > BigInt.fromI32(0) ? 
+                                                    BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
+                                                    BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
     categoryState.save()
 }
+
 
 // Booster Whitelisted
 export function handleBoosterWhiteListed(event: BoosterWhiteListed): void {
@@ -155,42 +156,22 @@ export function handleTransfer(event: Transfer): void {
         boosterState = createNewBooster(_boosterId)
     }
 
-    // remove BoosterID from the list of Boosters owned by previous User
-    if ( event.params.from.toHexString() != '0x0000000000000000000000000000000000000000' ) {
-        let userId = event.params.from.toHexString()
-        let user = User.load(userId)
-        // let list =  user.listOfBoostersOwned
-        // for (let i=0; i < list.length; i++) {
-        //     if ( list[i] ==  event.params.tokenId ) {
-        //         list[i] = list[list.length - 1]
-        //         break;
-        //     }
-        // }
-        // list.pop()
-        // user.listOfBoostersOwned = list
-        // user.save()
-    }
-
     // NEW OWNER
-    boosterState.ownerAddress = event.params.to
     let _userId = event.params.to.toHexString()
     let newUser = User.load(_userId)
     if (!newUser) {
         newUser = createUser(_userId)
+        newUser.address = event.params.to
     }
-    newUser.address = event.params.to
     boosterState.owner = newUser.id
-    let allBoostersOwned = newUser.listOfBoostersOwned
-    allBoostersOwned.push(event.params.tokenId)
-    newUser.listOfBoostersOwned = allBoostersOwned
-
-
+    boosterState.ownerAddress = event.params.to
 
     boosterState.save()
     newUser.save()
 }
 
-// ApprovalForAll Handler
+
+// Approval Handler
 export function handleApproval(event: Approval): void {
     let _boosterId = event.params.tokenId.toHexString()
     let boosterState = Booster.load(_boosterId)
@@ -205,30 +186,6 @@ export function handleApproval(event: Approval): void {
 
 // ApprovalForAll Handler
 export function handleApprovalForAll(event: ApprovalForAll): void {
-
-    let userId = event.params.owner.toHexString()
-    let user = User.load(userId)
-    if (!user) {
-        user = createUser(userId)
-        user.address = event.params.owner
-    }    
-    let list = user.approvedForAllAddress
-
-    if (event.params.approved) {
-        list.push(event.params.operator)
-    }
-    else {
-        for (let i=0;i < list.length; i++) {
-            if ( list[i] == event.params.operator ) {
-                list[i] = list[list.length - 1]
-                list.pop()
-                break;
-            }
-        }    
-    }
-
-    user.approvedForAllAddress = list
-    user.save()
 }
 
 

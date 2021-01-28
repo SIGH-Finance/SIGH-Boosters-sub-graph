@@ -58,8 +58,6 @@ export function createNewBooster(ID: string): Booster {
 export function createUser(ID: string): User {
     let _User = new User(ID)
     _User.address = Address.fromString('0x0000000000000000000000000000000000000000') 
-    _User.listOfBoostersOwned = []
-    _User.approvedForAllAddress = []
     _User.save()
     return _User
 }
