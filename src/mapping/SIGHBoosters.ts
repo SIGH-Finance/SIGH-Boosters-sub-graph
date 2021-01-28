@@ -1,6 +1,6 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { newCategoryAdded, baseURIUpdated,BoosterMinted,boosterURIUpdated,discountMultiplierUpdated,BoosterWhiteListed
-,BoosterBlackListed,Transfer,Approval,ApprovalForAll } from "../../generated/SIGHBoosters/SIGHBoosters"
+,BoosterBlackListed,Transfer,Approval,ApprovalForAll, OwnershipTransferred } from "../../generated/SIGHBoosters/SIGHBoosters"
 import { SIGHBoosters,Booster, BoosterCategory, User } from "../../generated/schema"
 import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} from "../helpers"
 
@@ -8,11 +8,6 @@ import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} fr
 export function handleBaseURIUpdated(event: baseURIUpdated): void {
     let _SIGHBoostersId = event.transaction.from.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
-    if (!SIGHBoostersState) {
-        SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
-    }
-    SIGHBoostersState.name = 'SIGH Boosters'
-    SIGHBoostersState.symbol = '🚀'
     SIGHBoostersState.baseURI = event.params.baseURI
     log.info('handleBaseURIUpdated',[SIGHBoostersState.baseURI])
     SIGHBoostersState.save()
@@ -34,7 +29,7 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
     log.info('handleNewCategoryAdded',[categoryState.name])
 
     // SIGH Boosters
-    let _SIGHBoostersId = event.transaction.from.toHexString()
+    let _SIGHBoostersId = event.address.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     if (!SIGHBoostersState) {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
@@ -54,9 +49,6 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
 export function handleBoosterMinted(event: BoosterMinted): void {
     let _boosterId = event.params.newItemId.toHexString()
     let boosterState = Booster.load(_boosterId)
-    if (!boosterState) {
-        boosterState = createNewBooster(_boosterId)
-    }
     boosterState.boosterID = event.params.newItemId
     boosterState.ownerAddress = event.params._owner
     boosterState.imageUrl = event.params.boosterURI
@@ -70,9 +62,6 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     // SIGH Boosters
     let _SIGHBoostersId = event.transaction.from.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
-    if (!SIGHBoostersState) {
-        SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
-    }
     SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
     boosterState._SIGHBoosters = _SIGHBoostersId
     
@@ -91,6 +80,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.owner = user.id
 
     SIGHBoostersState.save()
+    categoryState.save()
     boosterState.save()
     user.save()
 }
@@ -98,11 +88,8 @@ export function handleBoosterMinted(event: BoosterMinted): void {
 
 // Booster URI Updated
 export function handleBoosterURIUpdated(event: boosterURIUpdated): void {
-    let _boosterId = event.params._boosterURI
+    let _boosterId = event.params.boosterId.toHexString()
     let boosterState = Booster.load(_boosterId)
-    if (!boosterState) {
-        boosterState = createNewBooster(_boosterId)
-    }
     boosterState.imageUrl = event.params._boosterURI
     boosterState.save()
 }
@@ -116,6 +103,11 @@ export function handleDiscountMultiplierUpdated(event: discountMultiplierUpdated
                                                     BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
     categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
                                                     BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+     // Save Tx Hash
+     let txHash = categoryState.DiscountUpdateTxHashes
+     txHash.push( event.transaction.hash )
+     categoryState.DiscountUpdateTxHashes = txHash    
+ 
     categoryState.save()
 }
 
@@ -155,6 +147,7 @@ export function handleTransfer(event: Transfer): void {
     if (!boosterState) {
         boosterState = createNewBooster(_boosterId)
     }
+    boosterState.boosterID = event.params.tokenId
 
     // NEW OWNER
     let _userId = event.params.to.toHexString()
@@ -175,10 +168,6 @@ export function handleTransfer(event: Transfer): void {
 export function handleApproval(event: Approval): void {
     let _boosterId = event.params.tokenId.toHexString()
     let boosterState = Booster.load(_boosterId)
-    if (!boosterState) {
-        boosterState = createNewBooster(_boosterId)
-    }
-
     boosterState.approvedAddress = event.params.approved
     boosterState.save()
 }
@@ -186,6 +175,20 @@ export function handleApproval(event: Approval): void {
 
 // ApprovalForAll Handler
 export function handleApprovalForAll(event: ApprovalForAll): void {
+}
+
+
+// TransferOwnership Handler
+export function handleTransferOwnership(event: OwnershipTransferred): void {
+    let _SIGHBoostersId = event.address.toHexString()
+    let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
+    if (!SIGHBoostersState) {
+        SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
+        SIGHBoostersState.name = 'SIGH Boosters'
+        SIGHBoostersState.symbol = '🚀'    
+    }
+    SIGHBoostersState.adminAddress = event.params.newOwner
+    SIGHBoostersState.save()
 }
 
 

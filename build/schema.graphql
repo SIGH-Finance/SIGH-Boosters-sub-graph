@@ -3,6 +3,7 @@ type SIGHBoosters @entity {
   name: String!
   symbol: String!
   baseURI: String!
+  adminAddress: Bytes!
   categories: [BoosterCategory!] @derivedFrom(field:"_SIGHBoosters")
   boosters: [Booster!] @derivedFrom(field:"_SIGHBoosters")
   totalBoosters: BigInt!

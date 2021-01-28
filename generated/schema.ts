@@ -69,6 +69,15 @@ export class SIGHBoosters extends Entity {
     this.set("baseURI", Value.fromString(value));
   }
 
+  get adminAddress(): Bytes {
+    let value = this.get("adminAddress");
+    return value.toBytes();
+  }
+
+  set adminAddress(value: Bytes) {
+    this.set("adminAddress", Value.fromBytes(value));
+  }
+
   get categories(): Array<string> | null {
     let value = this.get("categories");
     if (value === null || value.kind == ValueKind.NULL) {

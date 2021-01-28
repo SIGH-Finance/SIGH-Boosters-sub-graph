@@ -13,6 +13,7 @@ export function createSIGHBoosters(ID: string): SIGHBoosters {
     let _SIGHBoosters = new SIGHBoosters(ID)
     _SIGHBoosters.name = ''
     _SIGHBoosters.symbol = ''
+    _SIGHBoosters.adminAddress =Address.fromString('0x0000000000000000000000000000000000000000') 
     _SIGHBoosters.baseURI = ''
     _SIGHBoosters.totalBoosters = new BigInt(0)
     _SIGHBoosters.save()
