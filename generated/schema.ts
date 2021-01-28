@@ -526,6 +526,15 @@ export class BoostersSaleInfo extends Entity {
       this.set("purchasers", Value.fromStringArray(value as Array<string>));
     }
   }
+
+  get adminAddress(): Bytes {
+    let value = this.get("adminAddress");
+    return value.toBytes();
+  }
+
+  set adminAddress(value: Bytes) {
+    this.set("adminAddress", Value.fromBytes(value));
+  }
 }
 
 export class SaleCategories extends Entity {

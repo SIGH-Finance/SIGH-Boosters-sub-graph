@@ -57,6 +57,7 @@ type BoostersSaleInfo @entity {
   tokenAcceptedForSale: PaymentMode!
   allTokensAcceptedForSale: [PaymentMode!] @derivedFrom(field:"saleSession")
   purchasers: [BoosterPurchasers!]  @derivedFrom(field:"saleSession")
+  adminAddress: Bytes!
 }
 
 
@@ -65,7 +66,6 @@ type SaleCategories @entity {
   name: String!
   allBoosters: [boosterSaleEntity!] @derivedFrom(field:"saleCategory")
   totalBoostersSold: BigInt!
-  # boostersAvailableIDsList: [BigInt!]
   boostersSoldIDsList: [BigInt!]
   totalBoostersAvailable: BigInt!
   salePrice: BigDecimal!

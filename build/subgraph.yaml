@@ -91,3 +91,5 @@ dataSources:
           handler: handleBoostersBought
         - event: FundsTransferred(uint256)
           handler: handleFundsTransferred
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleTransferOwnership

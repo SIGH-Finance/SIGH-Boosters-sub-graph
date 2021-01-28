@@ -6,7 +6,7 @@ import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} fr
 
 // updates the Base URI
 export function handleBaseURIUpdated(event: baseURIUpdated): void {
-    let _SIGHBoostersId = event.transaction.from.toHexString()
+    let _SIGHBoostersId = event.address.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     SIGHBoostersState.baseURI = event.params.baseURI
     log.info('handleBaseURIUpdated',[SIGHBoostersState.baseURI])
@@ -60,7 +60,7 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.category = categoryState.id
 
     // SIGH Boosters
-    let _SIGHBoostersId = event.transaction.from.toHexString()
+    let _SIGHBoostersId = event.address.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
     boosterState._SIGHBoosters = _SIGHBoostersId
