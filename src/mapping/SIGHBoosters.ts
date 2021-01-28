@@ -6,7 +6,7 @@ import {createSIGHBoosters,createNewBooster,createBoosterCategory,createUser} fr
 
 // updates the Base URI
 export function handleBaseURIUpdated(event: baseURIUpdated): void {
-    let _SIGHBoostersId = BigInt.fromI32(1).toHexString()
+    let _SIGHBoostersId = event.transaction.from.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     if (!SIGHBoostersState) {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
@@ -14,6 +14,7 @@ export function handleBaseURIUpdated(event: baseURIUpdated): void {
     SIGHBoostersState.name = 'SIGH Boosters'
     SIGHBoostersState.symbol = '🚀'
     SIGHBoostersState.baseURI = event.params.baseURI
+    log.info('handleBaseURIUpdated',[SIGHBoostersState.baseURI])
     SIGHBoostersState.save()
 }
 
@@ -25,15 +26,21 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
         categoryState = createBoosterCategory(categoryId)
     }
     categoryState.name = event.params._type
-    categoryState.platformDiscountPercent = BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() 
-    categoryState.reserveFeeDiscountPercent = BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() 
+    
+    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_ > BigInt.fromI32(0) ? 
+                                                    BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
+                                                    BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    log.info('handleNewCategoryAdded',[categoryState.name])
 
     // SIGH Boosters
-    let SIGHBoostersState = SIGHBoosters.load(BigInt.fromI32(1).toHexString())
+    let _SIGHBoostersId = event.transaction.from.toHexString()
+    let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     if (!SIGHBoostersState) {
-        SIGHBoostersState = createSIGHBoosters(BigInt.fromI32(1).toHexString())
+        SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
     }
-    categoryState._SIGHBoosters = SIGHBoostersState.id
+    categoryState._SIGHBoosters = _SIGHBoostersId
+    log.info('handleNewCategoryAdded',[SIGHBoostersState.id])
 
     // Tx Hash
     let txHash = categoryState.creationTxHash
@@ -60,11 +67,14 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.category = categoryState.id
 
     // SIGH Boosters
-    let SIGHBoostersState = SIGHBoosters.load(BigInt.fromI32(1).toHexString())
+    let _SIGHBoostersId = event.transaction.from.toHexString()
+    let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
+    if (!SIGHBoostersState) {
+        SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
+    }
+    boosterState._SIGHBoosters = _SIGHBoostersId
     SIGHBoostersState.totalBoosters = SIGHBoostersState.totalBoosters.plus(BigInt.fromI32(1))
-    boosterState._SIGHBoosters = SIGHBoostersState.id
     
-
     // Creation Tx Hash
     let txHash = boosterState.creationTxHash
     txHash.push( event.transaction.hash )
@@ -75,8 +85,8 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     let user = User.load(userId)
     if (!user) {
         user = createUser(userId)
+        user.address = event.params._owner
     }
-    user.address = event.params._owner
     let allBoostersOwned = user.listOfBoostersOwned
     allBoostersOwned.push(event.params.newItemId)
     user.listOfBoostersOwned = allBoostersOwned
@@ -92,6 +102,9 @@ export function handleBoosterMinted(event: BoosterMinted): void {
 export function handleBoosterURIUpdated(event: boosterURIUpdated): void {
     let _boosterId = event.params._boosterURI
     let boosterState = Booster.load(_boosterId)
+    if (!boosterState) {
+        boosterState = createNewBooster(_boosterId)
+    }
     boosterState.imageUrl = event.params._boosterURI
     boosterState.save()
 }

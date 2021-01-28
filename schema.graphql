@@ -3,10 +3,24 @@ type SIGHBoosters @entity {
   name: String!
   symbol: String!
   baseURI: String!
-  categories: [BoosterCategory!]! @derivedFrom(field:"_SIGHBoosters")
-  boosters: [Booster!]! @derivedFrom(field:"_SIGHBoosters")
+  categories: [BoosterCategory!] @derivedFrom(field:"_SIGHBoosters")
+  boosters: [Booster!] @derivedFrom(field:"_SIGHBoosters")
   totalBoosters: BigInt!
 }
+
+
+type BoosterCategory @entity {
+  id: ID!
+  name: String!
+  boostersList: [Booster!]! @derivedFrom(field:"category") 
+  platformDiscountPercent: BigDecimal!
+  reserveFeeDiscountPercent: BigDecimal!
+  totalBoosters: BigInt!
+  creationTxHash: [Bytes!]!
+  DiscountUpdateTxHashes: [Bytes!]!
+  _SIGHBoosters: SIGHBoosters!
+}
+
 
 type Booster @entity {
   id: ID!
@@ -24,17 +38,7 @@ type Booster @entity {
   _SIGHBoosters: SIGHBoosters!
 }
 
-type BoosterCategory @entity {
-  id: ID!
-  name: String!
-  boostersList: [Booster!]! @derivedFrom(field:"category") 
-  platformDiscountPercent: BigDecimal!
-  reserveFeeDiscountPercent: BigDecimal!
-  totalBoosters: BigInt!
-  creationTxHash: [Bytes!]!
-  DiscountUpdateTxHashes: [Bytes!]!
-  _SIGHBoosters: SIGHBoosters!
-}
+
 
 
 type User @entity {

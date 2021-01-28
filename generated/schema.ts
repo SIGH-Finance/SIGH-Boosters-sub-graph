@@ -69,22 +69,38 @@ export class SIGHBoosters extends Entity {
     this.set("baseURI", Value.fromString(value));
   }
 
-  get categories(): Array<string> {
+  get categories(): Array<string> | null {
     let value = this.get("categories");
-    return value.toStringArray();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set categories(value: Array<string>) {
-    this.set("categories", Value.fromStringArray(value));
+  set categories(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("categories");
+    } else {
+      this.set("categories", Value.fromStringArray(value as Array<string>));
+    }
   }
 
-  get boosters(): Array<string> {
+  get boosters(): Array<string> | null {
     let value = this.get("boosters");
-    return value.toStringArray();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set boosters(value: Array<string>) {
-    this.set("boosters", Value.fromStringArray(value));
+  set boosters(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("boosters");
+    } else {
+      this.set("boosters", Value.fromStringArray(value as Array<string>));
+    }
   }
 
   get totalBoosters(): BigInt {
@@ -94,6 +110,109 @@ export class SIGHBoosters extends Entity {
 
   set totalBoosters(value: BigInt) {
     this.set("totalBoosters", Value.fromBigInt(value));
+  }
+}
+
+export class BoosterCategory extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save BoosterCategory entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save BoosterCategory entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("BoosterCategory", id.toString(), this);
+  }
+
+  static load(id: string): BoosterCategory | null {
+    return store.get("BoosterCategory", id) as BoosterCategory | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    return value.toString();
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get boostersList(): Array<string> {
+    let value = this.get("boostersList");
+    return value.toStringArray();
+  }
+
+  set boostersList(value: Array<string>) {
+    this.set("boostersList", Value.fromStringArray(value));
+  }
+
+  get platformDiscountPercent(): BigDecimal {
+    let value = this.get("platformDiscountPercent");
+    return value.toBigDecimal();
+  }
+
+  set platformDiscountPercent(value: BigDecimal) {
+    this.set("platformDiscountPercent", Value.fromBigDecimal(value));
+  }
+
+  get reserveFeeDiscountPercent(): BigDecimal {
+    let value = this.get("reserveFeeDiscountPercent");
+    return value.toBigDecimal();
+  }
+
+  set reserveFeeDiscountPercent(value: BigDecimal) {
+    this.set("reserveFeeDiscountPercent", Value.fromBigDecimal(value));
+  }
+
+  get totalBoosters(): BigInt {
+    let value = this.get("totalBoosters");
+    return value.toBigInt();
+  }
+
+  set totalBoosters(value: BigInt) {
+    this.set("totalBoosters", Value.fromBigInt(value));
+  }
+
+  get creationTxHash(): Array<Bytes> {
+    let value = this.get("creationTxHash");
+    return value.toBytesArray();
+  }
+
+  set creationTxHash(value: Array<Bytes>) {
+    this.set("creationTxHash", Value.fromBytesArray(value));
+  }
+
+  get DiscountUpdateTxHashes(): Array<Bytes> {
+    let value = this.get("DiscountUpdateTxHashes");
+    return value.toBytesArray();
+  }
+
+  set DiscountUpdateTxHashes(value: Array<Bytes>) {
+    this.set("DiscountUpdateTxHashes", Value.fromBytesArray(value));
+  }
+
+  get _SIGHBoosters(): string {
+    let value = this.get("_SIGHBoosters");
+    return value.toString();
+  }
+
+  set _SIGHBoosters(value: string) {
+    this.set("_SIGHBoosters", Value.fromString(value));
   }
 }
 
@@ -224,109 +343,6 @@ export class Booster extends Entity {
 
   set blaclistedTxHashes(value: Array<Bytes>) {
     this.set("blaclistedTxHashes", Value.fromBytesArray(value));
-  }
-
-  get _SIGHBoosters(): string {
-    let value = this.get("_SIGHBoosters");
-    return value.toString();
-  }
-
-  set _SIGHBoosters(value: string) {
-    this.set("_SIGHBoosters", Value.fromString(value));
-  }
-}
-
-export class BoosterCategory extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id !== null, "Cannot save BoosterCategory entity without an ID");
-    assert(
-      id.kind == ValueKind.STRING,
-      "Cannot save BoosterCategory entity with non-string ID. " +
-        'Considering using .toHex() to convert the "id" to a string.'
-    );
-    store.set("BoosterCategory", id.toString(), this);
-  }
-
-  static load(id: string): BoosterCategory | null {
-    return store.get("BoosterCategory", id) as BoosterCategory | null;
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get name(): string {
-    let value = this.get("name");
-    return value.toString();
-  }
-
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
-  }
-
-  get boostersList(): Array<string> {
-    let value = this.get("boostersList");
-    return value.toStringArray();
-  }
-
-  set boostersList(value: Array<string>) {
-    this.set("boostersList", Value.fromStringArray(value));
-  }
-
-  get platformDiscountPercent(): BigDecimal {
-    let value = this.get("platformDiscountPercent");
-    return value.toBigDecimal();
-  }
-
-  set platformDiscountPercent(value: BigDecimal) {
-    this.set("platformDiscountPercent", Value.fromBigDecimal(value));
-  }
-
-  get reserveFeeDiscountPercent(): BigDecimal {
-    let value = this.get("reserveFeeDiscountPercent");
-    return value.toBigDecimal();
-  }
-
-  set reserveFeeDiscountPercent(value: BigDecimal) {
-    this.set("reserveFeeDiscountPercent", Value.fromBigDecimal(value));
-  }
-
-  get totalBoosters(): BigInt {
-    let value = this.get("totalBoosters");
-    return value.toBigInt();
-  }
-
-  set totalBoosters(value: BigInt) {
-    this.set("totalBoosters", Value.fromBigInt(value));
-  }
-
-  get creationTxHash(): Array<Bytes> {
-    let value = this.get("creationTxHash");
-    return value.toBytesArray();
-  }
-
-  set creationTxHash(value: Array<Bytes>) {
-    this.set("creationTxHash", Value.fromBytesArray(value));
-  }
-
-  get DiscountUpdateTxHashes(): Array<Bytes> {
-    let value = this.get("DiscountUpdateTxHashes");
-    return value.toBytesArray();
-  }
-
-  set DiscountUpdateTxHashes(value: Array<Bytes>) {
-    this.set("DiscountUpdateTxHashes", Value.fromBytesArray(value));
   }
 
   get _SIGHBoosters(): string {

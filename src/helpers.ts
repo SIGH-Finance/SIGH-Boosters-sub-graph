@@ -19,6 +19,20 @@ export function createSIGHBoosters(ID: string): SIGHBoosters {
     return _SIGHBoosters
 }
 
+// Creates a Booster Category entity
+export function createBoosterCategory(ID: string): BoosterCategory {
+    let _BoosterCategory = new BoosterCategory(ID)
+    _BoosterCategory.name = ''
+    _BoosterCategory.platformDiscountPercent = BigDecimal.fromString('0')
+    _BoosterCategory.reserveFeeDiscountPercent = BigDecimal.fromString('0')
+    _BoosterCategory.totalBoosters = new BigInt(0)
+    _BoosterCategory.creationTxHash = []
+    _BoosterCategory.DiscountUpdateTxHashes = []
+    _BoosterCategory._SIGHBoosters = '0x0000000000000000000000000000000000000000'
+    _BoosterCategory.save()
+    return _BoosterCategory
+}
+
 // Creates an Individual Booster entity
 export function createNewBooster(ID: string): Booster {
     let _Booster = new Booster(ID)
@@ -31,22 +45,14 @@ export function createNewBooster(ID: string): Booster {
     _Booster.isBlacklisted = false
     _Booster.creationTxHash = []
     _Booster.blaclistedTxHashes = []
+    _Booster.category = '_'
+    _Booster._SIGHBoosters = '0x0000000000000000000000000000000000000000'
+    _Booster.owner = '0x0000000000000000000000000000000000000000'
     _Booster.save()
     return _Booster
 }
 
-// Creates a Booster Category entity
-export function createBoosterCategory(ID: string): BoosterCategory {
-    let _BoosterCategory = new BoosterCategory(ID)
-    _BoosterCategory.name = ''
-    _BoosterCategory.platformDiscountPercent = BigDecimal.fromString('0')
-    _BoosterCategory.reserveFeeDiscountPercent = BigDecimal.fromString('0')
-    _BoosterCategory.totalBoosters = new BigInt(0)
-    _BoosterCategory.creationTxHash = []
-    _BoosterCategory.DiscountUpdateTxHashes = []
-    _BoosterCategory.save()
-    return _BoosterCategory
-}
+
 
 // Creates a User entity
 export function createUser(ID: string): User {
