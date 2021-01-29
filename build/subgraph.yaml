@@ -8,9 +8,9 @@ dataSources:
     name: SIGHBoosters
     network: kovan
     source:
-      address: "0xfAfa18152F3de472695DE69d2e4175224D9eaAA0"
+      address: "0xE00c407e1AD26AeF6d4aE77F930AB63CA260b537"
       abi: SIGHBoosters
-      startBlock: 23181161
+      startBlock: 23205639
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -55,7 +55,7 @@ dataSources:
     name: SIGHBoosterSale
     network: kovan
     source:
-      address: "0xaBAc56f252755c5e356C154d90EfDc1034113c34"
+      address: "0x0000000000000000000000000000000000000000"
       abi: SIGHBoosterSale
       startBlock: 23181161
     mapping:

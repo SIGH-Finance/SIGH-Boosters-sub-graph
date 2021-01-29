@@ -300,13 +300,13 @@ export class Booster extends Entity {
     this.set("approvedAddress", Value.fromBytes(value));
   }
 
-  get imageUrl(): string {
-    let value = this.get("imageUrl");
+  get booster_URI(): string {
+    let value = this.get("booster_URI");
     return value.toString();
   }
 
-  set imageUrl(value: string) {
-    this.set("imageUrl", Value.fromString(value));
+  set booster_URI(value: string) {
+    this.set("booster_URI", Value.fromString(value));
   }
 
   get fuelAvailable(): BigDecimal {

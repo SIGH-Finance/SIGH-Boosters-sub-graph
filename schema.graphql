@@ -30,7 +30,7 @@ type Booster @entity {
   owner: User!
   ownerAddress: Bytes!
   approvedAddress: Bytes!
-  imageUrl: String!
+  booster_URI: String!
   fuelAvailable: BigDecimal!
   fuelUsed: BigDecimal!
   isBlacklisted: Boolean!

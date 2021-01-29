@@ -40,7 +40,7 @@ export function createNewBooster(ID: string): Booster {
     _Booster.boosterID = new BigInt(0)
     _Booster.ownerAddress = Address.fromString('0x0000000000000000000000000000000000000000') 
     _Booster.approvedAddress = Address.fromString('0x0000000000000000000000000000000000000000') 
-    _Booster.imageUrl = ''
+    _Booster.booster_URI = ''
     _Booster.fuelAvailable = BigDecimal.fromString('0')
     _Booster.fuelUsed = BigDecimal.fromString('0')
     _Booster.isBlacklisted = false
@@ -126,10 +126,13 @@ export function createPaymentMode(ID: string): PaymentMode {
 // An 1:1 entity for the Booster Category  
 export function createBoosterPurchaser(ID: string): BoosterPurchasers {
     let _BoosterPurchaser = new BoosterPurchasers(ID)
+    log.info('1 ---> createBoosterPurchaser, {}',[ID])
     _BoosterPurchaser.address = Address.fromString('0x0000000000000000000000000000000000000000') 
     _BoosterPurchaser.SIGH_Rewards = BigDecimal.fromString('0')
+    log.info('2 ---> createBoosterPurchaser, {}',[ID])
     _BoosterPurchaser.purchaseTxs = [] 
     _BoosterPurchaser.saleSession = '0x0000000000000000000000000000000000000000'
+    log.info('3 ---> createBoosterPurchaser, {}',[ID])
     _BoosterPurchaser.save()
     return _BoosterPurchaser
 }

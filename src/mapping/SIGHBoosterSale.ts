@@ -200,37 +200,37 @@ export function handleBoosterSold(event: BoosterSold) : void {
 
 export function handleBoostersBought(event: BoostersBought) : void {
     let BoosterPurchasersId = event.params.caller.toHexString()
+    log.info('1 ---> handleBoostersBought, {}',[BoosterPurchasersId])
     let BoosterPurchasers_ = BoosterPurchasers.load(BoosterPurchasersId)
     if (!BoosterPurchasersId) {
         BoosterPurchasers_ = createBoosterPurchaser(BoosterPurchasersId)
         BoosterPurchasers_.address = event.params.caller
     }
+    log.info('2 ---> handleBoostersBought, {}',[BoosterPurchasers_.address.toHexString()])
 
     let _BoostersSalesInfoId = event.address.toHexString()
     let BoostersSalesInfoState = BoostersSaleInfo.load(_BoostersSalesInfoId)
     BoosterPurchasers_.saleSession = BoostersSalesInfoState.id
-
-    let PaymentModeStateId = BoostersSalesInfoState.tokenAcceptedForSale
-    let paymentMode = PaymentMode.load(PaymentModeStateId)
-
-    let decimalAdj = BigInt.fromI32(10).pow(paymentMode.decimals.toI32() as u8).toBigDecimal()
-    if (event.params._BoosterType == 'MARVIN') {
-        let rewardRatio = BigInt.fromI32(12).toBigDecimal()
-        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio).div(BigInt.fromI32(10).toBigDecimal())
-        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
-    }
-    if (event.params._BoosterType == 'JARVIS') {
-        let rewardRatio = BigInt.fromI32(12).toBigDecimal()
-        let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio).div(BigInt.fromI32(10).toBigDecimal())
-        BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
-    }
+    log.info('3 ---> handleBoostersBought, {}',[BoostersSalesInfoState.id])
 
 
-    let listOfTxs = BoosterPurchasers_.purchaseTxs
-    listOfTxs.push(event.transaction.hash)
-    BoosterPurchasers_.purchaseTxs = listOfTxs
+    // if (event.params._BoosterType == 'MARVIN') {
+    //     let rewardRatio = BigInt.fromI32(12).toBigDecimal()
+    //     let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio).div(BigInt.fromI32(10).toBigDecimal())
+    //     BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
+    // }
+    // if (event.params._BoosterType == 'JARVIS') {
+    //     let rewardRatio = BigInt.fromI32(12).toBigDecimal()
+    //     let amount = event.params.amountToBePaid.toBigDecimal().div(decimalAdj).times(rewardRatio).div(BigInt.fromI32(10).toBigDecimal())
+    //     BoosterPurchasers_.SIGH_Rewards = BoosterPurchasers_.SIGH_Rewards.plus(amount)
+    // }
 
 
+    // let listOfTxs = BoosterPurchasers_.purchaseTxs
+    // listOfTxs.push(event.transaction.hash)
+    // BoosterPurchasers_.purchaseTxs = listOfTxs
+
+    log.info('4 ---> handleBoostersBought, {}',[BoosterPurchasers_.id])
     BoosterPurchasers_.save()
 }
 
