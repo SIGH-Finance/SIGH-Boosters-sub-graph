@@ -97,6 +97,7 @@ type PaymentMode @entity {
 type BoosterPurchasers @entity {
   id: ID!
   address: Bytes!
+  listOfBoostersBought: [BigInt!]
   SIGH_Rewards: BigDecimal!
   purchaseTxs: [Bytes!]
   saleSession: BoostersSaleInfo!  

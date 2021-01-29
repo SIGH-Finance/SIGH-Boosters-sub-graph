@@ -885,6 +885,26 @@ export class BoosterPurchasers extends Entity {
     this.set("address", Value.fromBytes(value));
   }
 
+  get listOfBoostersBought(): Array<BigInt> | null {
+    let value = this.get("listOfBoostersBought");
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigIntArray();
+    }
+  }
+
+  set listOfBoostersBought(value: Array<BigInt> | null) {
+    if (value === null) {
+      this.unset("listOfBoostersBought");
+    } else {
+      this.set(
+        "listOfBoostersBought",
+        Value.fromBigIntArray(value as Array<BigInt>)
+      );
+    }
+  }
+
   get SIGH_Rewards(): BigDecimal {
     let value = this.get("SIGH_Rewards");
     return value.toBigDecimal();

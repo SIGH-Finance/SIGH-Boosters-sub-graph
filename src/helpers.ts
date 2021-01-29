@@ -131,6 +131,7 @@ export function createBoosterPurchaser(ID: string): BoosterPurchasers {
     _BoosterPurchaser.SIGH_Rewards = BigDecimal.fromString('0')
     log.info('2 ---> createBoosterPurchaser, {}',[ID])
     _BoosterPurchaser.purchaseTxs = [] 
+    _BoosterPurchaser.listOfBoostersBought = []
     _BoosterPurchaser.saleSession = '0x0000000000000000000000000000000000000000'
     log.info('3 ---> createBoosterPurchaser, {}',[ID])
     _BoosterPurchaser.save()
