@@ -55,19 +55,23 @@ dataSources:
     name: SIGHBoosterSale
     network: kovan
     source:
-      address: "0x0000000000000000000000000000000000000000"
+      address: "0x076102A56DAd0e0FA40C1Cd6F1050dbAD9adcB51"
       abi: SIGHBoosterSale
-      startBlock: 23181161
+      startBlock: 23206321
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
       language: wasm/assemblyscript
       file: SIGHBoosterSale/SIGHBoosterSale.wasm
       entities:
-        - BoosterSale
+        - BoostersSaleInfo
+        - SaleCategories
+        - boosterSaleEntity
+        - PaymentMode
+        - BoosterPurchasers
         - SIGHBoosters
-        - Category
         - Booster
+        - BoosterCategory
         - user
       abis:
         - name: SIGHBoosterSale

@@ -5,8 +5,19 @@ import { BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, Booste
 import {createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
 import { ERC20 } from '../../generated/SIGHBoosterSale/ERC20'
 
+// TransferOwnership Handler (emitted during deployment) : TESTED
+export function handleTransferOwnership(event: OwnershipTransferred): void {
+    let _BoostersSalesId = event.address.toHexString()
+    let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
+    if (!BoostersSalesState) {
+        BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
+        BoostersSalesState.BoostersSaleContractAddress = event.address
+    }
+    BoostersSalesState.adminAddress = event.params.newOwner
+    BoostersSalesState.save()
+}
 
-// SALE INITIATION TIMESTAMP IS UPDATED
+// SALE INITIATION TIMESTAMP IS UPDATED : TESTED
 export function handleSaleTimeUpdated(event: SaleTimeUpdated) : void {
     let _BoostersSalesId = event.address.toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
@@ -15,10 +26,17 @@ export function handleSaleTimeUpdated(event: SaleTimeUpdated) : void {
 }
 
 
-//PAYMENT TOKEN BEING ACCEPTED IS UPDATED
+//PAYMENT TOKEN BEING ACCEPTED IS UPDATED : TESTED
 export function handlePaymentTokenUpdated(event: PaymentTokenUpdated) : void {
     let _BoostersSalesId = event.address.toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
+
+    let prevAcceptedTokenId = BoostersSalesState.tokenAcceptedForSale
+    if ( prevAcceptedTokenId != '0x0000000000000000000000000000000000000000') {
+        let prevAcceptedToken =  PaymentMode.load(prevAcceptedTokenId)
+        prevAcceptedToken.isActive = false
+        prevAcceptedToken.save()
+    }
 
     let _PaymentModeId = event.params.token.toHexString()
     let PaymentModeState = PaymentMode.load(_PaymentModeId)
@@ -32,16 +50,16 @@ export function handlePaymentTokenUpdated(event: PaymentTokenUpdated) : void {
         PaymentModeState.symbol =  _tokenContract.symbol()
         PaymentModeState.decimals =  BigInt.fromI32(_tokenContract.decimals())
         }
+
         PaymentModeState.isActive = true
         PaymentModeState.saleSession = BoostersSalesState.id
-
         PaymentModeState.save()
 
         BoostersSalesState.tokenAcceptedForSale = PaymentModeState.id
         BoostersSalesState.save()
 }
 
-//TOKENS BEING TRANSFERRED
+//TOKENS BEING TRANSFERRED : TESTED
 export function handleTokensTransferred(event: TokensTransferred) : void {
     let _BoostersSalesId = event.address.toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
@@ -65,7 +83,8 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
     PaymentModeState.amountTransferred = PaymentModeState.amountTransferred.plus(amount)
 
     let _tokenContract = ERC20.bind(event.params.token as Address)
-    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
+    let availAmount = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
+    PaymentModeState.amountAvailable = availAmount.div( decimalAdj )
 
     // Tx Hash
     let txHashes = PaymentModeState.transferTxs
@@ -75,8 +94,7 @@ export function handleTokensTransferred(event: TokensTransferred) : void {
     PaymentModeState.save()
 }
 
-
-//PART OF THE PAYMENT TOKEN BEING ACCEPTED HAS BEEN TRANSFERRED
+//PART OF THE PAYMENT TOKEN BEING ACCEPTED HAS BEEN TRANSFERRED: TESTED
 export function handleFundsTransferred(event: FundsTransferred) : void {
     let _BoostersSalesId = event.address.toHexString()
     let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
@@ -88,7 +106,8 @@ export function handleFundsTransferred(event: FundsTransferred) : void {
     PaymentModeState.amountTransferred = PaymentModeState.amountTransferred.plus(amount)
 
     let _tokenContract = ERC20.bind(PaymentModeState.address as Address)
-    PaymentModeState.amountAvailable = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
+    let availAmount = _tokenContract.balanceOf(BoostersSalesState.BoostersSaleContractAddress as Address).toBigDecimal()
+     PaymentModeState.amountAvailable = availAmount.div( decimalAdj )
 
     // Tx Hash
     let txHashes = PaymentModeState.transferTxs
@@ -143,9 +162,8 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
         _SaleCategory.saleSession = BoostersSalesState.id
     }
     _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.plus(BigInt.fromI32(1))
-
-    
     _boosterSaleEntity.saleCategory = _SaleCategory.id
+    
     _boosterSaleEntity.save()
     _SaleCategory.save()
 }
@@ -190,7 +208,8 @@ export function handleBoosterSold(event: BoosterSold) : void {
 
     log.info('----> handleBoosterSold : {}',[_BoostersSalesId])
     let _tokenContract = ERC20.bind(paymentMode.address as Address)
-    paymentMode.amountAvailable = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address).toBigDecimal()
+    let availAmount = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address).toBigDecimal()
+    paymentMode.amountAvailable = availAmount.div( decimalAdj )
 
     log.info('----> handleBoosterSold : {}',[_BoostersSalesId])
     _boosterSaleEntity.save()
@@ -234,15 +253,3 @@ export function handleBoostersBought(event: BoostersBought) : void {
     BoosterPurchasers_.save()
 }
 
-// TransferOwnership Handler
-export function handleTransferOwnership(event: OwnershipTransferred): void {
-    let _BoostersSalesId = event.address.toHexString()
-    let BoostersSalesState = BoostersSaleInfo.load(_BoostersSalesId)
-    if (!BoostersSalesState) {
-        BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
-        BoostersSalesState.BoostersSaleContractAddress = event.address
-    }
-    BoostersSalesState.adminAddress = event.params.newOwner
-    log.info("SIGH BOOSTER SALES CONTRACT - handleTransferOwnership",[])
-    BoostersSalesState.save()
-}
