@@ -98,6 +98,6 @@ type BoosterPurchasers @entity {
   id: ID!
   address: Bytes!
   SIGH_Rewards: BigDecimal!
-  purchaseTxs: [Bytes!]!
+  purchaseTxs: [Bytes!]
   saleSession: BoostersSaleInfo!  
 }

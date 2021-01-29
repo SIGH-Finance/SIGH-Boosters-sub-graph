@@ -91,9 +91,9 @@ dataSources:
           handler: handlePaymentTokenUpdated
         - event: BoosterSold(address,string,uint256,uint256)
           handler: handleBoosterSold
-        - event: BoostersBought(address,address,string,uint256,uint256)
-          handler: handleBoostersBought
         - event: FundsTransferred(uint256)
           handler: handleFundsTransferred
+        - event: TokensTransferred(address,address,uint256)
+          handler: handleTokensTransferred
         - event: OwnershipTransferred(indexed address,indexed address)
           handler: handleTransferOwnership

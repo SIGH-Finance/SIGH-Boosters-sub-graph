@@ -443,6 +443,15 @@ export class BoostersSaleInfo extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get adminAddress(): Bytes {
+    let value = this.get("adminAddress");
+    return value.toBytes();
+  }
+
+  set adminAddress(value: Bytes) {
+    this.set("adminAddress", Value.fromBytes(value));
+  }
+
   get BoostersSaleContractAddress(): Bytes {
     let value = this.get("BoostersSaleContractAddress");
     return value.toBytes();
@@ -450,6 +459,24 @@ export class BoostersSaleInfo extends Entity {
 
   set BoostersSaleContractAddress(value: Bytes) {
     this.set("BoostersSaleContractAddress", Value.fromBytes(value));
+  }
+
+  get activeTimestamp(): BigInt {
+    let value = this.get("activeTimestamp");
+    return value.toBigInt();
+  }
+
+  set activeTimestamp(value: BigInt) {
+    this.set("activeTimestamp", Value.fromBigInt(value));
+  }
+
+  get tokenAcceptedForSale(): string {
+    let value = this.get("tokenAcceptedForSale");
+    return value.toString();
+  }
+
+  set tokenAcceptedForSale(value: string) {
+    this.set("tokenAcceptedForSale", Value.fromString(value));
   }
 
   get categoriesForSale(): Array<string> | null {
@@ -470,24 +497,6 @@ export class BoostersSaleInfo extends Entity {
         Value.fromStringArray(value as Array<string>)
       );
     }
-  }
-
-  get activeTimestamp(): BigInt {
-    let value = this.get("activeTimestamp");
-    return value.toBigInt();
-  }
-
-  set activeTimestamp(value: BigInt) {
-    this.set("activeTimestamp", Value.fromBigInt(value));
-  }
-
-  get tokenAcceptedForSale(): string {
-    let value = this.get("tokenAcceptedForSale");
-    return value.toString();
-  }
-
-  set tokenAcceptedForSale(value: string) {
-    this.set("tokenAcceptedForSale", Value.fromString(value));
   }
 
   get allTokensAcceptedForSale(): Array<string> | null {
@@ -525,15 +534,6 @@ export class BoostersSaleInfo extends Entity {
     } else {
       this.set("purchasers", Value.fromStringArray(value as Array<string>));
     }
-  }
-
-  get adminAddress(): Bytes {
-    let value = this.get("adminAddress");
-    return value.toBytes();
-  }
-
-  set adminAddress(value: Bytes) {
-    this.set("adminAddress", Value.fromBytes(value));
   }
 }
 
@@ -894,13 +894,21 @@ export class BoosterPurchasers extends Entity {
     this.set("SIGH_Rewards", Value.fromBigDecimal(value));
   }
 
-  get purchaseTxs(): Array<Bytes> {
+  get purchaseTxs(): Array<Bytes> | null {
     let value = this.get("purchaseTxs");
-    return value.toBytesArray();
+    if (value === null || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytesArray();
+    }
   }
 
-  set purchaseTxs(value: Array<Bytes>) {
-    this.set("purchaseTxs", Value.fromBytesArray(value));
+  set purchaseTxs(value: Array<Bytes> | null) {
+    if (value === null) {
+      this.unset("purchaseTxs");
+    } else {
+      this.set("purchaseTxs", Value.fromBytesArray(value as Array<Bytes>));
+    }
   }
 
   get saleSession(): string {
