@@ -70,7 +70,8 @@ export function createUser(ID: string): User {
 // Keeps Track of the Boosters Sales
 export function createBoostersSaleInfo(ID: string): BoostersSaleInfo {
     let _BoostersSaleInfo = new BoostersSaleInfo(ID)
-    _BoostersSaleInfo.BoostersSaleContractAddress = Address.fromString('0x0000000000000000000000000000000000000000') 
+    _BoostersSaleInfo.BoostersSaleContractAddress = Address.fromString('0x0000000000000000000000000000000000000000')
+    _BoostersSaleInfo.BoostersContractAddress  = Address.fromString('0x0000000000000000000000000000000000000000')
     _BoostersSaleInfo.activeTimestamp = new BigInt(0)
     _BoostersSaleInfo.tokenAcceptedForSale = '0x0000000000000000000000000000000000000000'
     _BoostersSaleInfo.adminAddress = Address.fromString('0x0000000000000000000000000000000000000000') 

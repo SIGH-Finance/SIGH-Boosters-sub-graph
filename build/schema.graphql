@@ -53,6 +53,7 @@ type BoostersSaleInfo @entity {
   id: ID!
   adminAddress: Bytes!
   BoostersSaleContractAddress: Bytes!
+  BoostersContractAddress: Bytes!
   activeTimestamp: BigInt!
   tokenAcceptedForSale: PaymentMode!
   categoriesForSale: [SaleCategories!] @derivedFrom(field:"saleSession")

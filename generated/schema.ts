@@ -461,6 +461,15 @@ export class BoostersSaleInfo extends Entity {
     this.set("BoostersSaleContractAddress", Value.fromBytes(value));
   }
 
+  get BoostersContractAddress(): Bytes {
+    let value = this.get("BoostersContractAddress");
+    return value.toBytes();
+  }
+
+  set BoostersContractAddress(value: Bytes) {
+    this.set("BoostersContractAddress", Value.fromBytes(value));
+  }
+
   get activeTimestamp(): BigInt {
     let value = this.get("activeTimestamp");
     return value.toBigInt();

@@ -1,7 +1,7 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { BoosterAddedForSale, SalePriceUpdated,PaymentTokenUpdated,FundsTransferred,SaleTimeUpdated,BoosterSold
 ,BoostersBought,BoosterAdded,TokensTransferred, OwnershipTransferred } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
-import { BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
+import { SIGHBoosters, BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
 import {createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
 import { ERC20 } from '../../generated/SIGHBoosterSale/ERC20'
 
@@ -12,6 +12,7 @@ export function handleTransferOwnership(event: OwnershipTransferred): void {
     if (!BoostersSalesState) {
         BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
         BoostersSalesState.BoostersSaleContractAddress = event.address
+        BoostersSalesState.BoostersContractAddress = Address.fromString('0xe00c407e1ad26aef6d4ae77f930ab63ca260b537')
     }
     BoostersSalesState.adminAddress = event.params.newOwner
     BoostersSalesState.save()
@@ -121,6 +122,7 @@ export function handleFundsTransferred(event: FundsTransferred) : void {
 // Booster Added for Sale, BoosterAdded & BoosterAddedForSale are emitted together : TESTED
 export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
     // Booster Entity which is added
+
     let _BoostersSalesId = event.params.boosterid.toHexString()
     let _boosterSaleEntity = boosterSaleEntity.load(_BoostersSalesId)
     if (!_boosterSaleEntity) {
@@ -131,16 +133,18 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
     }
 
     // Category of the Booster Entity which is added
+    let BoostersSalesState = BoostersSaleInfo.load(event.address.toHexString())
     let _SaleCategoryID = event.params._type
     let _SaleCategory = SaleCategories.load(_SaleCategoryID)
     if (!_SaleCategory) {
         _SaleCategory = createSaleCategory(_SaleCategoryID)
         _SaleCategory.name = event.params._type
-        let BoostersSalesState = BoostersSaleInfo.load(event.address.toHexString())
         _SaleCategory.saleSession = BoostersSalesState.id
     }
+
     _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.plus(BigInt.fromI32(1))
     _boosterSaleEntity.saleCategory = _SaleCategory.id
+
 
     _boosterSaleEntity.save()
     _SaleCategory.save()
