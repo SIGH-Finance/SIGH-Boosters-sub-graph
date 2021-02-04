@@ -13,10 +13,16 @@ type SIGHBoosters @entity {
 type BoosterCategory @entity {
   id: ID!
   name: String!
+  totalBoosters: BigInt!
   boostersList: [Booster!]! @derivedFrom(field:"category") 
+  initialFuelAvailable: BigInt!
   platformDiscountPercent: BigDecimal!
   reserveFeeDiscountPercent: BigDecimal!
-  totalBoosters: BigInt!
+
+  topUpMultiplier: BigInt!
+  topUpMinAmount: BigInt!
+  topUpMultiplierTwo: BigInt!
+
   creationTxHash: [Bytes!]!
   DiscountUpdateTxHashes: [Bytes!]!
   _SIGHBoosters: SIGHBoosters!
@@ -66,6 +72,13 @@ type SaleCategories @entity {
   id: ID!
   name: String!
   allBoosters: [boosterSaleEntity!] @derivedFrom(field:"saleCategory")
+  initialFuelAvailable: BigInt!
+  platformDiscountPercent: BigDecimal!
+  reserveFeeDiscountPercent: BigDecimal!
+  topUpMultiplier: BigInt!
+  topUpMinAmount: BigInt!
+  topUpMultiplierTwo: BigInt!
+  totalBoosters: BigInt!
   totalBoostersSold: BigInt!
   boostersSoldIDsList: [BigInt!]
   totalBoostersAvailable: BigInt!

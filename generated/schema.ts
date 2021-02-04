@@ -161,6 +161,15 @@ export class BoosterCategory extends Entity {
     this.set("name", Value.fromString(value));
   }
 
+  get totalBoosters(): BigInt {
+    let value = this.get("totalBoosters");
+    return value.toBigInt();
+  }
+
+  set totalBoosters(value: BigInt) {
+    this.set("totalBoosters", Value.fromBigInt(value));
+  }
+
   get boostersList(): Array<string> {
     let value = this.get("boostersList");
     return value.toStringArray();
@@ -168,6 +177,15 @@ export class BoosterCategory extends Entity {
 
   set boostersList(value: Array<string>) {
     this.set("boostersList", Value.fromStringArray(value));
+  }
+
+  get initialFuelAvailable(): BigInt {
+    let value = this.get("initialFuelAvailable");
+    return value.toBigInt();
+  }
+
+  set initialFuelAvailable(value: BigInt) {
+    this.set("initialFuelAvailable", Value.fromBigInt(value));
   }
 
   get platformDiscountPercent(): BigDecimal {
@@ -188,13 +206,31 @@ export class BoosterCategory extends Entity {
     this.set("reserveFeeDiscountPercent", Value.fromBigDecimal(value));
   }
 
-  get totalBoosters(): BigInt {
-    let value = this.get("totalBoosters");
+  get topUpMultiplier(): BigInt {
+    let value = this.get("topUpMultiplier");
     return value.toBigInt();
   }
 
-  set totalBoosters(value: BigInt) {
-    this.set("totalBoosters", Value.fromBigInt(value));
+  set topUpMultiplier(value: BigInt) {
+    this.set("topUpMultiplier", Value.fromBigInt(value));
+  }
+
+  get topUpMinAmount(): BigInt {
+    let value = this.get("topUpMinAmount");
+    return value.toBigInt();
+  }
+
+  set topUpMinAmount(value: BigInt) {
+    this.set("topUpMinAmount", Value.fromBigInt(value));
+  }
+
+  get topUpMultiplierTwo(): BigInt {
+    let value = this.get("topUpMultiplierTwo");
+    return value.toBigInt();
+  }
+
+  set topUpMultiplierTwo(value: BigInt) {
+    this.set("topUpMultiplierTwo", Value.fromBigInt(value));
   }
 
   get creationTxHash(): Array<Bytes> {
@@ -600,6 +636,69 @@ export class SaleCategories extends Entity {
     } else {
       this.set("allBoosters", Value.fromStringArray(value as Array<string>));
     }
+  }
+
+  get initialFuelAvailable(): BigInt {
+    let value = this.get("initialFuelAvailable");
+    return value.toBigInt();
+  }
+
+  set initialFuelAvailable(value: BigInt) {
+    this.set("initialFuelAvailable", Value.fromBigInt(value));
+  }
+
+  get platformDiscountPercent(): BigDecimal {
+    let value = this.get("platformDiscountPercent");
+    return value.toBigDecimal();
+  }
+
+  set platformDiscountPercent(value: BigDecimal) {
+    this.set("platformDiscountPercent", Value.fromBigDecimal(value));
+  }
+
+  get reserveFeeDiscountPercent(): BigDecimal {
+    let value = this.get("reserveFeeDiscountPercent");
+    return value.toBigDecimal();
+  }
+
+  set reserveFeeDiscountPercent(value: BigDecimal) {
+    this.set("reserveFeeDiscountPercent", Value.fromBigDecimal(value));
+  }
+
+  get topUpMultiplier(): BigInt {
+    let value = this.get("topUpMultiplier");
+    return value.toBigInt();
+  }
+
+  set topUpMultiplier(value: BigInt) {
+    this.set("topUpMultiplier", Value.fromBigInt(value));
+  }
+
+  get topUpMinAmount(): BigInt {
+    let value = this.get("topUpMinAmount");
+    return value.toBigInt();
+  }
+
+  set topUpMinAmount(value: BigInt) {
+    this.set("topUpMinAmount", Value.fromBigInt(value));
+  }
+
+  get topUpMultiplierTwo(): BigInt {
+    let value = this.get("topUpMultiplierTwo");
+    return value.toBigInt();
+  }
+
+  set topUpMultiplierTwo(value: BigInt) {
+    this.set("topUpMultiplierTwo", Value.fromBigInt(value));
+  }
+
+  get totalBoosters(): BigInt {
+    let value = this.get("totalBoosters");
+    return value.toBigInt();
+  }
+
+  set totalBoosters(value: BigInt) {
+    this.set("totalBoosters", Value.fromBigInt(value));
   }
 
   get totalBoostersSold(): BigInt {

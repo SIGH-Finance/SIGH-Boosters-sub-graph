@@ -26,6 +26,12 @@ export function createBoosterCategory(ID: string): BoosterCategory {
     _BoosterCategory.name = ''
     _BoosterCategory.platformDiscountPercent = BigDecimal.fromString('0')
     _BoosterCategory.reserveFeeDiscountPercent = BigDecimal.fromString('0')
+    
+    _BoosterCategory.initialFuelAvailable = BigInt.fromI32(0)
+    _BoosterCategory.topUpMultiplier = BigInt.fromI32(0)
+    _BoosterCategory.topUpMinAmount = BigInt.fromI32(0)
+    _BoosterCategory.topUpMultiplierTwo =  BigInt.fromI32(0)
+
     _BoosterCategory.totalBoosters = new BigInt(0)
     _BoosterCategory.creationTxHash = []
     _BoosterCategory.DiscountUpdateTxHashes = []
@@ -83,10 +89,18 @@ export function createBoostersSaleInfo(ID: string): BoostersSaleInfo {
 export function createSaleCategory(ID: string): SaleCategories {
     let _SaleCategory = new SaleCategories(ID)
     _SaleCategory.name = ''
+    _SaleCategory.totalBoosters = new BigInt(0) 
     _SaleCategory.totalBoostersAvailable = new BigInt(0) 
     _SaleCategory.totalBoostersSold = new BigInt(0)
+    _SaleCategory.initialFuelAvailable = BigInt.fromI32(0)
+    _SaleCategory.topUpMultiplier = BigInt.fromI32(0)
+    _SaleCategory.topUpMinAmount = BigInt.fromI32(0)
+    _SaleCategory.topUpMultiplierTwo =  BigInt.fromI32(0)
     _SaleCategory.boostersSoldIDsList = []  
     _SaleCategory.salePrice = BigDecimal.fromString('0')
+    _SaleCategory.initialFuelAvailable = BigInt.fromI32(0)
+    _SaleCategory.platformDiscountPercent = BigDecimal.fromString('0')
+    _SaleCategory.reserveFeeDiscountPercent = BigDecimal.fromString('0')
     _SaleCategory.saleSession = '0x0000000000000000000000000000000000000000'
     _SaleCategory.save()
     return _SaleCategory

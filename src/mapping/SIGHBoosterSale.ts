@@ -1,7 +1,7 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { BoosterAddedForSale, SalePriceUpdated,PaymentTokenUpdated,FundsTransferred,SaleTimeUpdated,BoosterSold
 ,BoostersBought,BoosterAdded,TokensTransferred, OwnershipTransferred } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
-import { SIGHBoosters, BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
+import { BoosterCategory, BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
 import {createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
 import { ERC20 } from '../../generated/SIGHBoosterSale/ERC20'
 
@@ -140,6 +140,14 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
         _SaleCategory = createSaleCategory(_SaleCategoryID)
         _SaleCategory.name = event.params._type
         _SaleCategory.saleSession = BoostersSalesState.id
+        let categoryState_ = BoosterCategory.load(_SaleCategoryID)
+        _SaleCategory.totalBoosters = categoryState_.totalBoosters
+        _SaleCategory.initialFuelAvailable = categoryState_.initialFuelAvailable
+        _SaleCategory.topUpMultiplier = categoryState_.topUpMultiplier
+        _SaleCategory.topUpMinAmount = categoryState_.topUpMinAmount
+        _SaleCategory.topUpMultiplierTwo = categoryState_.topUpMultiplierTwo
+        _SaleCategory.platformDiscountPercent = categoryState_.platformDiscountPercent
+        _SaleCategory.reserveFeeDiscountPercent = categoryState_.reserveFeeDiscountPercent
     }
 
     _SaleCategory.totalBoostersAvailable = _SaleCategory.totalBoostersAvailable.plus(BigInt.fromI32(1))

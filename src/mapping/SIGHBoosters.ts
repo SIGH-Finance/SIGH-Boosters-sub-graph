@@ -33,6 +33,18 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
     let categoryState = BoosterCategory.load(categoryId)
     if (!categoryState) {
         categoryState = createBoosterCategory(categoryId)
+        if (event.params._type == 'CYBERTRUCK ON MARS') {
+            categoryState.initialFuelAvailable = BigInt.fromI32(100)
+            categoryState.topUpMultiplier = BigInt.fromI32(110)
+            categoryState.topUpMinAmount = BigInt.fromI32(50)
+            categoryState.topUpMultiplierTwo =  BigInt.fromI32(130)
+        }
+        if (event.params._type == 'Fifty more things to do in Zero Gravity') {
+            categoryState.initialFuelAvailable = BigInt.fromI32(400)
+            categoryState.topUpMultiplier = BigInt.fromI32(130)
+            categoryState.topUpMinAmount = BigInt.fromI32(100)
+            categoryState.topUpMultiplierTwo =  BigInt.fromI32(150)
+        }
     }
     categoryState.name = event.params._type
     categoryState.platformDiscountPercent = event.params._platformFeeDiscount_ > BigInt.fromI32(0) ? 
