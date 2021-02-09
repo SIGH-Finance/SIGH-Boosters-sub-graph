@@ -141,6 +141,7 @@ export function handleBoosterAddedForSale(event: BoosterAddedForSale) : void {
         _SaleCategory.name = event.params._type
         _SaleCategory.saleSession = BoostersSalesState.id
         let categoryState_ = BoosterCategory.load(_SaleCategoryID)
+        _SaleCategory.maxBoostersAllowed = categoryState_.maxBoostersAllowed
         _SaleCategory.totalBoosters = categoryState_.totalBoosters
         _SaleCategory.initialFuelAvailable = categoryState_.initialFuelAvailable
         _SaleCategory.topUpMultiplier = categoryState_.topUpMultiplier

@@ -8,7 +8,7 @@ dataSources:
     name: SIGHBoosters
     network: kovan
     source:
-      address: "0x9DbdDC9949B9CD721601c7C7aaC2Fc61C956dA56"
+      address: "0x6160DFA610D0B1092117660813c44E195403dC5A"
       abi: SIGHBoosters
       startBlock: 23384234
     mapping:
@@ -29,7 +29,7 @@ dataSources:
         - name: Ownable
           file: SIGHBoosters/abis/Ownable.json
       eventHandlers:
-        - event: newCategoryAdded(string,uint256,uint256)
+        - event: newCategoryAdded(string,uint256,uint256,uint256)
           handler: handleNewCategoryAdded
         - event: baseURIUpdated(string)
           handler: handleBaseURIUpdated
@@ -55,7 +55,7 @@ dataSources:
     name: SIGHBoosterSale
     network: kovan
     source:
-      address: "0x21d006D392BEeD759f5d5e50d6B9F375Fb1968a9"
+      address: "0xee679580Bd832f7ef0ABC8192FB93922B285fdC6"
       abi: SIGHBoosterSale
       startBlock: 23384242
     mapping:

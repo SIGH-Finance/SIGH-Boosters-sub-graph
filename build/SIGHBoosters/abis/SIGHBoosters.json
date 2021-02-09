@@ -249,6 +249,12 @@
         "internalType": "uint256",
         "name": "_sighPayDiscount_",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_maxBoosters",
+        "type": "uint256"
       }
     ],
     "name": "newCategoryAdded",
@@ -282,6 +288,11 @@
       {
         "internalType": "uint256",
         "name": "_sighPayDiscount_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxBoosters",
         "type": "uint256"
       }
     ],
@@ -361,6 +372,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
       {
         "internalType": "string[]",
         "name": "_type",
@@ -497,6 +513,11 @@
         "internalType": "uint256",
         "name": "sighPayDiscount",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maxBoosters",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -626,6 +647,25 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_category",
+        "type": "string"
+      }
+    ],
+    "name": "maxBoostersAllowed",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

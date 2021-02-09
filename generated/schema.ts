@@ -161,6 +161,15 @@ export class BoosterCategory extends Entity {
     this.set("name", Value.fromString(value));
   }
 
+  get maxBoostersAllowed(): BigInt {
+    let value = this.get("maxBoostersAllowed");
+    return value.toBigInt();
+  }
+
+  set maxBoostersAllowed(value: BigInt) {
+    this.set("maxBoostersAllowed", Value.fromBigInt(value));
+  }
+
   get totalBoosters(): BigInt {
     let value = this.get("totalBoosters");
     return value.toBigInt();
@@ -699,6 +708,15 @@ export class SaleCategories extends Entity {
 
   set totalBoosters(value: BigInt) {
     this.set("totalBoosters", Value.fromBigInt(value));
+  }
+
+  get maxBoostersAllowed(): BigInt {
+    let value = this.get("maxBoostersAllowed");
+    return value.toBigInt();
+  }
+
+  set maxBoostersAllowed(value: BigInt) {
+    this.set("maxBoostersAllowed", Value.fromBigInt(value));
   }
 
   get totalBoostersSold(): BigInt {

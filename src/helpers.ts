@@ -32,6 +32,7 @@ export function createBoosterCategory(ID: string): BoosterCategory {
     _BoosterCategory.topUpMinAmount = BigInt.fromI32(0)
     _BoosterCategory.topUpMultiplierTwo =  BigInt.fromI32(0)
 
+    _BoosterCategory.maxBoostersAllowed = new BigInt(0)
     _BoosterCategory.totalBoosters = new BigInt(0)
     _BoosterCategory.creationTxHash = []
     _BoosterCategory.DiscountUpdateTxHashes = []
@@ -89,6 +90,7 @@ export function createBoostersSaleInfo(ID: string): BoostersSaleInfo {
 export function createSaleCategory(ID: string): SaleCategories {
     let _SaleCategory = new SaleCategories(ID)
     _SaleCategory.name = ''
+    _SaleCategory.maxBoostersAllowed = new BigInt(0) 
     _SaleCategory.totalBoosters = new BigInt(0) 
     _SaleCategory.totalBoostersAvailable = new BigInt(0) 
     _SaleCategory.totalBoostersSold = new BigInt(0)

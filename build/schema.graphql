@@ -13,6 +13,7 @@ type SIGHBoosters @entity {
 type BoosterCategory @entity {
   id: ID!
   name: String!
+  maxBoostersAllowed: BigInt!
   totalBoosters: BigInt!
   boostersList: [Booster!]! @derivedFrom(field:"category") 
   initialFuelAvailable: BigInt!
@@ -79,6 +80,7 @@ type SaleCategories @entity {
   topUpMinAmount: BigInt!
   topUpMultiplierTwo: BigInt!
   totalBoosters: BigInt!
+  maxBoostersAllowed: BigInt!
   totalBoostersSold: BigInt!
   boostersSoldIDsList: [BigInt!]
   totalBoostersAvailable: BigInt!

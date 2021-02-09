@@ -51,6 +51,7 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
                                                     BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
     categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
                                                     BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    categoryState.maxBoostersAllowed = event.params._maxBoosters 
     log.info('handleNewCategoryAdded',[categoryState.name])
 
     // SIGH Boosters

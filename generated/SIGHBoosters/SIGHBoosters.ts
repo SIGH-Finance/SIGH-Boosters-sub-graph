@@ -270,6 +270,10 @@ export class newCategoryAdded__Params {
   get _sighPayDiscount_(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get _maxBoosters(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
 }
 
 export class SIGHBoosters__getBoosterInfoResult {
@@ -277,12 +281,20 @@ export class SIGHBoosters__getBoosterInfoResult {
   value1: string;
   value2: BigInt;
   value3: BigInt;
+  value4: BigInt;
 
-  constructor(value0: Address, value1: string, value2: BigInt, value3: BigInt) {
+  constructor(
+    value0: Address,
+    value1: string,
+    value2: BigInt,
+    value3: BigInt,
+    value4: BigInt
+  ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
+    this.value4 = value4;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -291,6 +303,7 @@ export class SIGHBoosters__getBoosterInfoResult {
     map.set("value1", ethereum.Value.fromString(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
+    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     return map;
   }
 }
@@ -337,15 +350,17 @@ export class SIGHBoosters extends ethereum.SmartContract {
   addNewBoosterType(
     _type: string,
     _platformFeeDiscount_: BigInt,
-    _sighPayDiscount_: BigInt
+    _sighPayDiscount_: BigInt,
+    _maxBoosters: BigInt
   ): boolean {
     let result = super.call(
       "addNewBoosterType",
-      "addNewBoosterType(string,uint256,uint256):(bool)",
+      "addNewBoosterType(string,uint256,uint256,uint256):(bool)",
       [
         ethereum.Value.fromString(_type),
         ethereum.Value.fromUnsignedBigInt(_platformFeeDiscount_),
-        ethereum.Value.fromUnsignedBigInt(_sighPayDiscount_)
+        ethereum.Value.fromUnsignedBigInt(_sighPayDiscount_),
+        ethereum.Value.fromUnsignedBigInt(_maxBoosters)
       ]
     );
 
@@ -355,15 +370,17 @@ export class SIGHBoosters extends ethereum.SmartContract {
   try_addNewBoosterType(
     _type: string,
     _platformFeeDiscount_: BigInt,
-    _sighPayDiscount_: BigInt
+    _sighPayDiscount_: BigInt,
+    _maxBoosters: BigInt
   ): ethereum.CallResult<boolean> {
     let result = super.tryCall(
       "addNewBoosterType",
-      "addNewBoosterType(string,uint256,uint256):(bool)",
+      "addNewBoosterType(string,uint256,uint256,uint256):(bool)",
       [
         ethereum.Value.fromString(_type),
         ethereum.Value.fromUnsignedBigInt(_platformFeeDiscount_),
-        ethereum.Value.fromUnsignedBigInt(_sighPayDiscount_)
+        ethereum.Value.fromUnsignedBigInt(_sighPayDiscount_),
+        ethereum.Value.fromUnsignedBigInt(_maxBoosters)
       ]
     );
     if (result.reverted) {
@@ -407,11 +424,16 @@ export class SIGHBoosters extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
-  createNewBoosters(_type: Array<string>, boosterURI: Array<string>): BigInt {
+  createNewBoosters(
+    receiver: Address,
+    _type: Array<string>,
+    boosterURI: Array<string>
+  ): BigInt {
     let result = super.call(
       "createNewBoosters",
-      "createNewBoosters(string[],string[]):(uint256)",
+      "createNewBoosters(address,string[],string[]):(uint256)",
       [
+        ethereum.Value.fromAddress(receiver),
         ethereum.Value.fromStringArray(_type),
         ethereum.Value.fromStringArray(boosterURI)
       ]
@@ -421,13 +443,15 @@ export class SIGHBoosters extends ethereum.SmartContract {
   }
 
   try_createNewBoosters(
+    receiver: Address,
     _type: Array<string>,
     boosterURI: Array<string>
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "createNewBoosters",
-      "createNewBoosters(string[],string[]):(uint256)",
+      "createNewBoosters(address,string[],string[]):(uint256)",
       [
+        ethereum.Value.fromAddress(receiver),
         ethereum.Value.fromStringArray(_type),
         ethereum.Value.fromStringArray(boosterURI)
       ]
@@ -552,7 +576,7 @@ export class SIGHBoosters extends ethereum.SmartContract {
   getBoosterInfo(boosterId: BigInt): SIGHBoosters__getBoosterInfoResult {
     let result = super.call(
       "getBoosterInfo",
-      "getBoosterInfo(uint256):(address,string,uint256,uint256)",
+      "getBoosterInfo(uint256):(address,string,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(boosterId)]
     );
 
@@ -560,7 +584,8 @@ export class SIGHBoosters extends ethereum.SmartContract {
       result[0].toAddress(),
       result[1].toString(),
       result[2].toBigInt(),
-      result[3].toBigInt()
+      result[3].toBigInt(),
+      result[4].toBigInt()
     );
   }
 
@@ -569,7 +594,7 @@ export class SIGHBoosters extends ethereum.SmartContract {
   ): ethereum.CallResult<SIGHBoosters__getBoosterInfoResult> {
     let result = super.tryCall(
       "getBoosterInfo",
-      "getBoosterInfo(uint256):(address,string,uint256,uint256)",
+      "getBoosterInfo(uint256):(address,string,uint256,uint256,uint256)",
       [ethereum.Value.fromUnsignedBigInt(boosterId)]
     );
     if (result.reverted) {
@@ -581,7 +606,8 @@ export class SIGHBoosters extends ethereum.SmartContract {
         value[0].toAddress(),
         value[1].toString(),
         value[2].toBigInt(),
-        value[3].toBigInt()
+        value[3].toBigInt(),
+        value[4].toBigInt()
       )
     );
   }
@@ -749,6 +775,29 @@ export class SIGHBoosters extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  maxBoostersAllowed(_category: string): BigInt {
+    let result = super.call(
+      "maxBoostersAllowed",
+      "maxBoostersAllowed(string):(uint256)",
+      [ethereum.Value.fromString(_category)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_maxBoostersAllowed(_category: string): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "maxBoostersAllowed",
+      "maxBoostersAllowed(string):(uint256)",
+      [ethereum.Value.fromString(_category)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   name(): string {
@@ -1161,6 +1210,10 @@ export class AddNewBoosterTypeCall__Inputs {
   get _sighPayDiscount_(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
   }
+
+  get _maxBoosters(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
 }
 
 export class AddNewBoosterTypeCall__Outputs {
@@ -1256,12 +1309,16 @@ export class CreateNewBoostersCall__Inputs {
     this._call = call;
   }
 
+  get receiver(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
   get _type(): Array<string> {
-    return this._call.inputValues[0].value.toStringArray();
+    return this._call.inputValues[1].value.toStringArray();
   }
 
   get boosterURI(): Array<string> {
-    return this._call.inputValues[1].value.toStringArray();
+    return this._call.inputValues[2].value.toStringArray();
   }
 }
 
