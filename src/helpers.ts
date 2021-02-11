@@ -65,6 +65,7 @@ export function createNewBooster(ID: string): Booster {
 // Creates a User entity
 export function createUser(ID: string): User {
     let _User = new User(ID)
+    _User.SIGH_Rewards = BigDecimal.fromString('0')
     _User.address = Address.fromString('0x0000000000000000000000000000000000000000') 
     _User.save()
     return _User

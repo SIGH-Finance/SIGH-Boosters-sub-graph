@@ -1,8 +1,8 @@
 import { Address, BigInt,BigDecimal, log } from "@graphprotocol/graph-ts"
 import { BoosterAddedForSale, SalePriceUpdated,PaymentTokenUpdated,FundsTransferred,SaleTimeUpdated,BoosterSold
 ,BoostersBought,BoosterAdded,TokensTransferred, OwnershipTransferred } from "../../generated/SIGHBoosterSale/SIGHBoosterSale"
-import { BoosterCategory, BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
-import {createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
+import { User,BoosterCategory, BoostersSaleInfo,PaymentMode, SaleCategories, boosterSaleEntity, BoosterPurchasers,Booster } from "../../generated/schema"
+import {createUser,createBoostersSaleInfo,createPaymentMode,createboosterSaleEntity,createSaleCategory, createBoosterPurchaser} from "../helpers"
 import { ERC20 } from '../../generated/SIGHBoosterSale/ERC20'
 
 // TransferOwnership Handler (emitted during deployment) : TESTED
@@ -236,17 +236,31 @@ export function handleBoosterSold(event: BoosterSold) : void {
     paymentMode.amountAvailable = availAmount.div( decimalAdj )
 
     if (event.params._BoosterType == 'SIGH FARMS') {
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('200'))
+        let reward = BigInt.fromI32(200).toBigDecimal()
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
     if (event.params._BoosterType == 'INTELLIGENCE NETWORK') {
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('350'))
+        let reward = BigInt.fromI32(350).toBigDecimal()
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
     if (event.params._BoosterType == 'RESEARCH LABS IN SPACE') {
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('700'))
+        let reward = BigInt.fromI32(700).toBigDecimal()
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
 
+    let user = User.load(purchaserID)
+    if (!user) {
+        user = createUser(purchaserID)
+        user.address = purchaser.address
+
+    }
+    user.SIGH_Rewards = purchaser.SIGH_Rewards
 
 
+    user.save()
     purchaser.save()
     _boosterSaleEntity.save()
     _SaleCategory.save()

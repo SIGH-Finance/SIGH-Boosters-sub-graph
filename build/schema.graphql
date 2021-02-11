@@ -52,6 +52,7 @@ type Booster @entity {
 type User @entity {
   id: ID!
   address: Bytes!
+  SIGH_Rewards: BigDecimal!
   boostersOwned: [Booster!]! @derivedFrom(field:"owner")
 }
 

@@ -448,6 +448,15 @@ export class User extends Entity {
     this.set("address", Value.fromBytes(value));
   }
 
+  get SIGH_Rewards(): BigDecimal {
+    let value = this.get("SIGH_Rewards");
+    return value.toBigDecimal();
+  }
+
+  set SIGH_Rewards(value: BigDecimal) {
+    this.set("SIGH_Rewards", Value.fromBigDecimal(value));
+  }
+
   get boostersOwned(): Array<string> {
     let value = this.get("boostersOwned");
     return value.toStringArray();
