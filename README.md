@@ -3,8 +3,9 @@
 </p>
 
 
-# SUB GRAPH for the SIGH Boosters NFT Sale
+## SUB GRAPH for the SIGH Boosters NFT Sale
 
 - SubGraph Link : https://thegraph.com/explorer/subgraph/cryptowhaler/sigh-boosters
+- Documentation : https://docs.sigh.finance/sigh-boosters
 
 
