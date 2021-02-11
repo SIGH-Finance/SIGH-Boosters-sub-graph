@@ -235,21 +235,14 @@ export function handleBoosterSold(event: BoosterSold) : void {
     let availAmount = _tokenContract.balanceOf(BoostersSalesInfoState.BoostersSaleContractAddress as Address).toBigDecimal()
     paymentMode.amountAvailable = availAmount.div( decimalAdj )
 
-    if (event.params._BoosterType == 'CYBERTRUCK ON MARS') {
-        let reward = amount.times(BigInt.fromI32(110).toBigDecimal()).div(BigInt.fromI32(100).toBigDecimal())
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+    if (event.params._BoosterType == 'SIGH FARMS') {
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('200'))
     }
-    if (event.params._BoosterType == 'Fifty more things to do in Zero Gravity') {
-        let reward = amount.times(BigInt.fromI32(50).toBigDecimal()).div(BigInt.fromI32(100).toBigDecimal())
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+    if (event.params._BoosterType == 'INTELLIGENCE NETWORK') {
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('350'))
     }
-    if (event.params._BoosterType == 'DEEP THOUGHT') {
-        let reward = amount.times(BigInt.fromI32(0).toBigDecimal())
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
-    }
-    if (event.params._BoosterType == 'JARVIS') {
-        let reward = amount.times(BigInt.fromI32(150).toBigDecimal()).div(BigInt.fromI32(100).toBigDecimal())
-        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
+    if (event.params._BoosterType == 'RESEARCH LABS IN SPACE') {
+        purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(BigDecimal.fromString('700'))
     }
 
 

@@ -33,16 +33,22 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
     let categoryState = BoosterCategory.load(categoryId)
     if (!categoryState) {
         categoryState = createBoosterCategory(categoryId)
-        if (event.params._type == 'CYBERTRUCK ON MARS') {
-            categoryState.initialFuelAvailable = BigInt.fromI32(100)
+        if (event.params._type == 'SIGH FARMS') {
+            categoryState.initialFuelAvailable = BigInt.fromI32(510)
             categoryState.topUpMultiplier = BigInt.fromI32(110)
             categoryState.topUpMinAmount = BigInt.fromI32(50)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(130)
         }
-        if (event.params._type == 'Fifty more things to do in Zero Gravity') {
-            categoryState.initialFuelAvailable = BigInt.fromI32(400)
+        if (event.params._type == 'INTELLIGENCE NETWORK') {
+            categoryState.initialFuelAvailable = BigInt.fromI32(1400)
+            categoryState.topUpMultiplier = BigInt.fromI32(120)
+            categoryState.topUpMinAmount = BigInt.fromI32(500)
+            categoryState.topUpMultiplierTwo =  BigInt.fromI32(140)
+        }
+        if (event.params._type == 'RESEARCH LABS IN SPACE') {
+            categoryState.initialFuelAvailable = BigInt.fromI32(3100)
             categoryState.topUpMultiplier = BigInt.fromI32(130)
-            categoryState.topUpMinAmount = BigInt.fromI32(100)
+            categoryState.topUpMinAmount = BigInt.fromI32(1000)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(150)
         }
     }
