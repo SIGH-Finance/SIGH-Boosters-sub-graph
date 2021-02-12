@@ -131,6 +131,16 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     categoryState.totalBoosters = categoryState.totalBoosters.plus(BigInt.fromI32(1))
     boosterState.category = categoryState.id
 
+    if (boosterState.category == 'SIGH FARMS') {
+        boosterState.fuelAvailable = BigInt.fromI32(510).toBigDecimal()
+    }
+    if (boosterState.category == 'INTELLIGENCE NETWORK') {
+        boosterState.fuelAvailable = BigInt.fromI32(1400).toBigDecimal()
+    }
+    if (boosterState.category == 'RESEARCH LABS IN SPACE') {
+        boosterState.fuelAvailable = BigInt.fromI32(3100).toBigDecimal()
+    }
+
     // SIGH Boosters
     let _SIGHBoostersId = event.address.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
