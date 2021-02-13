@@ -34,29 +34,27 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
     if (!categoryState) {
         categoryState = createBoosterCategory(categoryId)
         if (event.params._type == 'SIGH FARMS') {
-            categoryState.initialFuelAvailable = BigInt.fromI32(510)
+            categoryState.initialFuelAvailable = BigInt.fromI32(1000)
             categoryState.topUpMultiplier = BigInt.fromI32(110)
             categoryState.topUpMinAmount = BigInt.fromI32(50)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(130)
         }
         if (event.params._type == 'INTELLIGENCE NETWORK') {
-            categoryState.initialFuelAvailable = BigInt.fromI32(1400)
+            categoryState.initialFuelAvailable = BigInt.fromI32(2500)
             categoryState.topUpMultiplier = BigInt.fromI32(120)
             categoryState.topUpMinAmount = BigInt.fromI32(500)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(140)
         }
         if (event.params._type == 'RESEARCH LABS IN SPACE') {
-            categoryState.initialFuelAvailable = BigInt.fromI32(3100)
+            categoryState.initialFuelAvailable = BigInt.fromI32(5000)
             categoryState.topUpMultiplier = BigInt.fromI32(130)
             categoryState.topUpMinAmount = BigInt.fromI32(1000)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(150)
         }
     }
     categoryState.name = event.params._type
-    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_ > BigInt.fromI32(0) ? 
-                                                    BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
-    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
-                                                    BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_.toBigDecimal()
+    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_.toBigDecimal()
     categoryState.maxBoostersAllowed = event.params._maxBoosters 
     log.info('handleNewCategoryAdded',[categoryState.name])
 
@@ -132,13 +130,13 @@ export function handleBoosterMinted(event: BoosterMinted): void {
     boosterState.category = categoryState.id
 
     if (boosterState.category == 'SIGH FARMS') {
-        boosterState.fuelAvailable = BigInt.fromI32(510).toBigDecimal()
+        boosterState.fuelAvailable = BigInt.fromI32(1000).toBigDecimal()
     }
     if (boosterState.category == 'INTELLIGENCE NETWORK') {
-        boosterState.fuelAvailable = BigInt.fromI32(1400).toBigDecimal()
+        boosterState.fuelAvailable = BigInt.fromI32(2500).toBigDecimal()
     }
     if (boosterState.category == 'RESEARCH LABS IN SPACE') {
-        boosterState.fuelAvailable = BigInt.fromI32(3100).toBigDecimal()
+        boosterState.fuelAvailable = BigInt.fromI32(5000).toBigDecimal()
     }
 
     // SIGH Boosters

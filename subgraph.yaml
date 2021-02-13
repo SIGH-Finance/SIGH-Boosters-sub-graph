@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: SIGHBoosters
-    network: kovan
+    network: rinkeby
     source:
-      address: '0xcb9707Da6c5D047c495A2F62e33eEcB90a9Fa1ac'
+      address: '0xBA920A5aec72A5E16eF73309DDB05D0fA8008743'
       abi: SIGHBoosters
-      startBlock: 23416896
+      startBlock: 8061526
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -54,11 +54,11 @@ dataSources:
 
   - kind: ethereum/contract
     name: SIGHBoosterSale
-    network: kovan
+    network: rinkeby
     source:
-      address: '0x61518Bc4d9503a888b4D3843Bc76F086a0a724b1'
+      address: '0x5b4a7d30a0b1Ad4968d3Bdaa717743c1413b5cCb'
       abi: SIGHBoosterSale
-      startBlock: 23416914
+      startBlock: 8065526
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
