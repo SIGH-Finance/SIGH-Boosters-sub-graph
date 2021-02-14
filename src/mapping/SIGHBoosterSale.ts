@@ -12,7 +12,7 @@ export function handleTransferOwnership(event: OwnershipTransferred): void {
     if (!BoostersSalesState) {
         BoostersSalesState = createBoostersSaleInfo(_BoostersSalesId)
         BoostersSalesState.BoostersSaleContractAddress = event.address
-        BoostersSalesState.BoostersContractAddress = Address.fromString('0xe00c407e1ad26aef6d4ae77f930ab63ca260b537')
+        BoostersSalesState.BoostersContractAddress = Address.fromString('0x069C045c325482A28f06E7f2fC1C02a1aAb81A68')
     }
     BoostersSalesState.adminAddress = event.params.newOwner
     BoostersSalesState.save()
@@ -238,17 +238,14 @@ export function handleBoosterSold(event: BoosterSold) : void {
     if (event.params._BoosterType == 'SIGH FARMS') {
         let reward = BigInt.fromI32(200).toBigDecimal()
         purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
-        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
     if (event.params._BoosterType == 'INTELLIGENCE NETWORK') {
         let reward = BigInt.fromI32(350).toBigDecimal()
         purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
-        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
     if (event.params._BoosterType == 'RESEARCH LABS IN SPACE') {
         let reward = BigInt.fromI32(700).toBigDecimal()
         purchaser.SIGH_Rewards = purchaser.SIGH_Rewards.plus(reward)
-        log.info("rewards 1 : {} ",[purchaser.SIGH_Rewards.toString()])
     }
 
     let user = User.load(purchaserID)

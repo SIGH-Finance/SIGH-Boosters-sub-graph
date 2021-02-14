@@ -12,7 +12,7 @@ export function handleTransferOwnership(event: OwnershipTransferred): void {
     if (!SIGHBoostersState) {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
         SIGHBoostersState.name = 'SIGH Boosters'
-        SIGHBoostersState.symbol = '🚀'    
+        SIGHBoostersState.symbol = 'SBT 🚀'    
     }
     SIGHBoostersState.adminAddress = event.params.newOwner
     SIGHBoostersState.save()
@@ -23,7 +23,6 @@ export function handleBaseURIUpdated(event: baseURIUpdated): void {
     let _SIGHBoostersId = event.address.toHexString()
     let SIGHBoostersState = SIGHBoosters.load(_SIGHBoostersId)
     SIGHBoostersState.baseURI = event.params.baseURI
-    log.info('handleBaseURIUpdated',[SIGHBoostersState.baseURI])
     SIGHBoostersState.save()
 }
 
@@ -35,28 +34,27 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
         categoryState = createBoosterCategory(categoryId)
         if (event.params._type == 'SIGH FARMS') {
             categoryState.initialFuelAvailable = BigInt.fromI32(1000)
-            categoryState.topUpMultiplier = BigInt.fromI32(110)
+            categoryState.topUpMultiplier = BigInt.fromI32(120)
             categoryState.topUpMinAmount = BigInt.fromI32(50)
             categoryState.topUpMultiplierTwo =  BigInt.fromI32(130)
         }
         if (event.params._type == 'INTELLIGENCE NETWORK') {
             categoryState.initialFuelAvailable = BigInt.fromI32(2500)
-            categoryState.topUpMultiplier = BigInt.fromI32(120)
+            categoryState.topUpMultiplier = BigInt.fromI32(130)
             categoryState.topUpMinAmount = BigInt.fromI32(500)
-            categoryState.topUpMultiplierTwo =  BigInt.fromI32(140)
+            categoryState.topUpMultiplierTwo =  BigInt.fromI32(145)
         }
         if (event.params._type == 'RESEARCH LABS IN SPACE') {
             categoryState.initialFuelAvailable = BigInt.fromI32(5000)
-            categoryState.topUpMultiplier = BigInt.fromI32(130)
+            categoryState.topUpMultiplier = BigInt.fromI32(140)
             categoryState.topUpMinAmount = BigInt.fromI32(1000)
-            categoryState.topUpMultiplierTwo =  BigInt.fromI32(150)
+            categoryState.topUpMultiplierTwo =  BigInt.fromI32(155)
         }
     }
     categoryState.name = event.params._type
     categoryState.platformDiscountPercent = event.params._platformFeeDiscount_.toBigDecimal()
     categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_.toBigDecimal()
     categoryState.maxBoostersAllowed = event.params._maxBoosters 
-    log.info('handleNewCategoryAdded',[categoryState.name])
 
     // SIGH Boosters
     let _SIGHBoostersId = event.address.toHexString()
@@ -65,7 +63,6 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
         SIGHBoostersState = createSIGHBoosters(_SIGHBoostersId)
     }
     categoryState._SIGHBoosters = _SIGHBoostersId
-    log.info('handleNewCategoryAdded',[SIGHBoostersState.id])
 
     // Tx Hash
     let txHash = categoryState.creationTxHash
@@ -79,10 +76,8 @@ export function handleNewCategoryAdded(event: newCategoryAdded): void {
 export function handleDiscountMultiplierUpdated(event: discountMultiplierUpdated): void {
     let categoryId = event.params._type
     let categoryState = BoosterCategory.load(categoryId)
-    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_ > BigInt.fromI32(0) ? 
-                                                    BigInt.fromI32(100).div(event.params._platformFeeDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
-    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_ > BigInt.fromI32(0) ? 
-                                                    BigInt.fromI32(100).div(event.params._sighPayDiscount_).toBigDecimal() : BigInt.fromI32(0).toBigDecimal() 
+    categoryState.platformDiscountPercent = event.params._platformFeeDiscount_.toBigDecimal()
+    categoryState.reserveFeeDiscountPercent = event.params._sighPayDiscount_.toBigDecimal()
      // Save Tx Hash
      let txHash = categoryState.DiscountUpdateTxHashes
      txHash.push( event.transaction.hash )
