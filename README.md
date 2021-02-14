@@ -13,5 +13,5 @@ You can also run this subgraph locally, if you wish. Instructions for that can b
 ### Getting started with querying
 You can also see the saved queries on the hosted service for examples.
 
-*SIGH Boosters Contract Address (Ethereum Main Network)* : [0x069c045c325482a28f06e7f2fc1c02a1aab81a68](https://etherscan.io/address/0x069c045c325482a28f06e7f2fc1c02a1aab81a68)
-SIGH Boosters Sale Contract Address (Ethereum Main Network) : [0xa4c51ac5028af6eb3f920b446be43b6e8368f229](https://etherscan.io/address/0xa4c51ac5028af6eb3f920b446be43b6e8368f229)
+<strong>SIGH Boosters Contract Address</strong> :  [0x069c045c325482a28f06e7f2fc1c02a1aab81a68](https://etherscan.io/address/0x069c045c325482a28f06e7f2fc1c02a1aab81a68) <br>
+<strong>SIGH Boosters Sale Contract Address</strong>: [0xa4c51ac5028af6eb3f920b446be43b6e8368f229](https://etherscan.io/address/0xa4c51ac5028af6eb3f920b446be43b6e8368f229)
