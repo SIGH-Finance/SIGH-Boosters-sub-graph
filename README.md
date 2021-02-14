@@ -3,7 +3,7 @@
 </p>
 
 ## SIGH BOOSTERS SUB-GRAPH
-[SIGH Boosters](http://sigh.discount/) are standard ERC721 NFTs which act as native discount coupons that will be accepted by SIGH Finance, an upcoming econometric Research Initiative. To learn more, visit - https://docs.sigh.finance/sigh-boosters
+[SIGH Boosters](http://sigh.discount/) are standard ERC721 NFTs which act as native discount coupons that will be accepted by SIGH Finance, an upcoming econometric Research Initiative into decentralized financial networks. To learn more, visit - https://docs.sigh.finance/sigh-boosters
 
 ### Networks and Performance
 This subgraph can be found on The Graph Hosted Service at https://thegraph.com/explorer/subgraph/cryptowhaler/sigh-boosters
